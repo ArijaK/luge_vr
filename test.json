@@ -1,0 +1,7 @@
+{
+  "segments": [
+	{ "length": 33.0, "radius": 17.0, "slope": 8.5, "direction": 1 },
+	{ "length": 42.0, "radius": 15.0, "slope": 13.7, "direction": -1 },
+	{ "length": 81.0, "radius": 21.0, "slope": 7.1, "direction": 1 }
+  ]
+}

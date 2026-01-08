@@ -3,31 +3,46 @@ class_name TrackGenerator extends Node3D
 
 @export var segment_mesh: Mesh
 @export var segment_length = 0.5
+@export var point_step = 1 # New point in track after every meter
 
-# TODO: Further must be received from a configuration file
-# Segments of the track - each new segment has different properties than the previous one
-var segments = [
-	# Direction (1-left, -1-right) - length (meters) - slope (percent) - radius (meters)
-	[1, 33, 8.5, 17],
-	[-1, 42, 13.7, 15]
-]
+# NOTE: Maybe replace [] returning with termination
+# Parse JSON file to get segments
+func parse_json(path: String) -> Array:
+	# Open file
+	var file = FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		push_error("Cannot open file " + path)
+		return []
+	
+	# Parse file
+	var json = JSON.new()
+	var error = json.parse(file.get_as_text())
+	if error == OK:
+		var data = json.data
+		if typeof(data) == TYPE_DICTIONARY:
+			return data["segments"]
+		else:
+			push_error("Unexpected data format")
+			return []
+	else:
+		push_error("JSON Parse Error: ", json.get_error_message(), " at line ", json.get_error_line())
+		return []
 
-const point_step = 1 # New point in track after every meter
 
 # Create the track line
-func generate_centerline(curve: Curve3D) -> void:
+func generate_centerline(curve: Curve3D, segments: Array) -> void:
 	var pos = Vector3.ZERO
 	var forward = Vector3.FORWARD
 	
 	for s in segments:
-		var slope_rad = atan(float(s[2]) / 100.0) # Convert slope % to radians
-		var curve_rad = float(s[1]) / float(s[3]) # Angle of the curve
-		var angle_step = point_step / float(s[3]) # New point in track after every angle x
+		var slope_rad = atan(float(s.slope) / 100.0) # Convert slope % to radians
+		var curve_rad = float(s.length) / float(s.radius) # Angle of the curve
+		var angle_step = point_step / float(s.radius) # New point in track after every angle x
 		
 		# NOTE: Must check edge-cases (end of the curve)
 		for i in range(0, int(curve_rad/angle_step)):
 			# Rotate point to the new pose
-			var rot = Transform3D().rotated(Vector3.UP, angle_step * s[0])
+			var rot = Transform3D().rotated(Vector3.UP, angle_step * s.direction)
 			forward = rot.basis * forward
 			# Translate point to the new pose
 			var translation = forward * point_step
@@ -64,8 +79,9 @@ func create_mesh(curve: Curve3D) -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var segments = parse_json("res://test.json")
 	var curve = Curve3D.new()
-	generate_centerline(curve)
+	generate_centerline(curve, segments)
 	create_mesh(curve)
 
 
