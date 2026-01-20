@@ -6,6 +6,15 @@ class_name TrackGenerator extends Node3D
 @export var point_step = 1 # New point in track after every meter
 
 # NOTE: Maybe replace [] returning with termination
+func load_config(path: String) -> ConfigFile:
+	var cfg = ConfigFile.new()
+	var result = cfg.load(path)
+	if result == OK:
+		return cfg
+	else:
+		push_error("Cannot open file " + path)
+		return null
+
 # Parse JSON file to get segments
 func parse_json(path: String) -> Array:
 	# Open file
@@ -79,7 +88,10 @@ func create_mesh(curve: Curve3D) -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var segments = parse_json("res://test.json")
+	var cfg = load_config("res://config.cfg")
+	var json_path = cfg.get_value("track", "json_file")
+	
+	var segments = parse_json(json_path)
 	var curve = Curve3D.new()
 	generate_centerline(curve, segments)
 	create_mesh(curve)
