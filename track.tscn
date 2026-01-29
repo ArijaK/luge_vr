@@ -5,7 +5,7 @@
 [sub_resource type="BoxMesh" id="BoxMesh_mll3j"]
 size = Vector3(1, 0.2, 1)
 
-[node name="Main" type="Node3D"]
+[node name="Track" type="Node3D"]
 script = ExtResource("1_mll3j")
 segment_mesh = SubResource("BoxMesh_mll3j")
 
