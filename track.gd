@@ -1,8 +1,6 @@
-# TODO: Refactor
 class_name TrackGenerator extends Node3D
 
-@export var segment_mesh: Mesh
-@export var segment_length = 0.5
+@export var mesh_steps = 200 # How many segments to make TODO: Maybe delete later
 @export var point_step = 1 # New point in track after every meter
 
 # NOTE: Maybe replace [] returning with termination
@@ -13,17 +11,15 @@ func load_config(path: String) -> ConfigFile:
 		return cfg
 	else:
 		push_error("Cannot open file " + path)
-		return null
+		return
 
-# Parse JSON file to get segments
+
 func parse_json(path: String) -> Array:
-	# Open file
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		push_error("Cannot open file " + path)
 		return []
 	
-	# Parse file
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
 	if error == OK:
@@ -61,38 +57,106 @@ func generate_centerline(curve: Curve3D, segments: Array) -> void:
 			pos += translation
 			curve.add_point(pos)
 
-
-# Create the track's body		
 func create_mesh(curve: Curve3D) -> void:
-	var path = Path3D.new()
-	path.curve = curve
-	add_child(path)
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
-	# The body
-	# TODO: Simple version, shall replace later with better option
-	var path_follow = PathFollow3D.new()
-	path.add_child(path_follow)
-	
-	var distance = 0.0
-	
-	while distance < curve.get_baked_length():
-		path_follow.progress = distance
-		
-		var mesh = MeshInstance3D.new()
-		mesh.mesh = segment_mesh
-		mesh.transform = path_follow.global_transform
-		path.add_child(mesh)
-		
-		distance += segment_length
+	# NOTE: Currently HARD coded, later may be added to config file
+	var length := curve.get_baked_length()
+	var steps := 200
 
+	# NOTE: Not the expected end result
+	var width := 2.0
+	var height := 0.2
+	var half_w := width * 0.5
+	var half_h := height * 0.5
 
-# Called when the node enters the scene tree for the first time.
+	var prev = null
+
+	for i in steps + 1:
+		var t := float(i) / steps
+		var d := t * length
+
+		var pos = curve.sample_baked(d)
+
+		# Tangent
+		var ahead = curve.sample_baked(d + 0.1)
+		var tangent = (ahead - pos).normalized()
+
+		# Up vector from curve
+		var up = curve.sample_baked_up_vector(d)
+
+		# Right + corrected normal
+		var right = tangent.cross(up).normalized()
+		var normal = right.cross(tangent).normalized()
+
+		# Rectangle corners
+		var lt = pos - right * half_w + normal * half_h
+		var rt = pos + right * half_w + normal * half_h
+		var lb = pos - right * half_w - normal * half_h
+		var rb = pos + right * half_w - normal * half_h
+
+		if prev != null:
+			var p_lt = prev.lt
+			var p_rt = prev.rt
+			var p_lb = prev.lb
+			var p_rb = prev.rb
+
+			# Top
+			st.add_vertex(p_lt)
+			st.add_vertex(p_rt)
+			st.add_vertex(rt)
+
+			st.add_vertex(p_lt)
+			st.add_vertex(rt)
+			st.add_vertex(lt)
+
+			# Bottom
+			st.add_vertex(p_lb)
+			st.add_vertex(rb)
+			st.add_vertex(p_rb)
+
+			st.add_vertex(p_lb)
+			st.add_vertex(lb)
+			st.add_vertex(rb)
+
+			# Left side
+			st.add_vertex(p_lb)
+			st.add_vertex(p_lt)
+			st.add_vertex(lt)
+
+			st.add_vertex(p_lb)
+			st.add_vertex(lt)
+			st.add_vertex(lb)
+
+			# Right side
+			st.add_vertex(p_rb)
+			st.add_vertex(rt)
+			st.add_vertex(p_rt)
+
+			st.add_vertex(p_rb)
+			st.add_vertex(rb)
+			st.add_vertex(rt)
+
+		prev = {
+			"lt": lt,
+			"rt": rt,
+			"lb": lb,
+			"rb": rb
+		}
+
+	st.generate_normals()
+	var new_mesh = st.commit()
+	mesh.mesh = new_mesh
+
+@onready var curve = $Path3D.curve
+@onready var mesh = $MeshInstance3D
+
 func _ready() -> void:
 	var cfg = load_config("res://config.cfg")
 	var json_path = cfg.get_value("track", "json_file")
 	
 	var segments = parse_json(json_path)
-	var curve = Curve3D.new()
 	generate_centerline(curve, segments)
 	create_mesh(curve)
 

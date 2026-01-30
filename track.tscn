@@ -2,13 +2,16 @@
 
 [ext_resource type="Script" uid="uid://bw0p34kol6enc" path="res://track.gd" id="1_mll3j"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_mll3j"]
-size = Vector3(1, 0.2, 1)
+[sub_resource type="Curve3D" id="Curve3D_mll3j"]
 
 [node name="Track" type="Node3D"]
 script = ExtResource("1_mll3j")
-segment_mesh = SubResource("BoxMesh_mll3j")
+
+[node name="Path3D" type="Path3D" parent="."]
+curve = SubResource("Curve3D_mll3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.577178, 0.314871, -0.7534732, -0.038787168, 0.9322038, 0.35984942, 0.8156967, -0.17847207, 0.55026054, -2.4838035, 2.6603453, 0)
+transform = Transform3D(0.577178, 0.314871, -0.7534731, -0.038787168, 0.9322038, 0.3598494, 0.8156967, -0.17847206, 0.5502605, -2.4838035, 2.6603453, 0)
 current = true
