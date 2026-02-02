@@ -164,7 +164,7 @@ func _ready() -> void:
 	
 	trajectory.curve = generate_centerline(Vector3(start_pos[0], start_pos[1], start_pos[2]), segments)
 	
-	if trajectory.curve.point_count() > 0:
+	if trajectory.curve.point_count > 0:
 		create_mesh(trajectory.curve)
 
 
