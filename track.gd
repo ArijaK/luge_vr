@@ -1,9 +1,9 @@
 class_name TrackGenerator extends Node3D
 
-@export var mesh_steps = 200 # How many segments to make TODO: Maybe delete later
-@export var point_step = 1 # New point in track after every meter
+@export var mesh_steps = 200  # How many segments to make
+@export var point_step = 1    # New point in track after every meter
 
-# NOTE: Maybe replace [] returning with termination
+
 func load_config(path: String) -> ConfigFile:
 	var cfg = ConfigFile.new()
 	var result = cfg.load(path)
@@ -34,9 +34,10 @@ func parse_json(path: String) -> Array:
 		return []
 
 
-# Create the track line
-func generate_centerline(curve: Curve3D, segments: Array) -> void:
-	var pos = Vector3.ZERO
+func generate_centerline(start: Vector3, segments: Array) -> Curve3D:
+	var result = Curve3D.new()
+	
+	# Intial point of the trajectory
 	var forward = Vector3.FORWARD
 	
 	for s in segments:
@@ -44,7 +45,6 @@ func generate_centerline(curve: Curve3D, segments: Array) -> void:
 		var curve_rad = float(s.length) / float(s.radius) # Angle of the curve
 		var angle_step = point_step / float(s.radius) # New point in track after every angle x
 		
-		# NOTE: Must check edge-cases (end of the curve)
 		for i in range(0, int(curve_rad/angle_step)):
 			# Rotate point to the new pose
 			var rot = Transform3D().rotated(Vector3.UP, angle_step * s.direction)
@@ -54,8 +54,11 @@ func generate_centerline(curve: Curve3D, segments: Array) -> void:
 			# Apply slope
 			translation.y -= tan(slope_rad) * point_step
 			# Update position of new point
-			pos += translation
-			curve.add_point(pos)
+			start += translation
+			result.add_point(start)
+	
+	return result
+
 
 func create_mesh(curve: Curve3D) -> void:
 	var st = SurfaceTool.new()
@@ -149,16 +152,20 @@ func create_mesh(curve: Curve3D) -> void:
 	var new_mesh = st.commit()
 	mesh.mesh = new_mesh
 
-@onready var curve = $Path3D.curve
+
+@onready var trajectory = $Path3D
 @onready var mesh = $MeshInstance3D
+
 
 func _ready() -> void:
 	var cfg = load_config("res://config.cfg")
-	var json_path = cfg.get_value("track", "json_file")
+	var segments = parse_json(cfg.get_value("track", "segments_path"))
+	var start_pos = cfg.get_value("track", "start_pos")
 	
-	var segments = parse_json(json_path)
-	generate_centerline(curve, segments)
-	create_mesh(curve)
+	trajectory.curve = generate_centerline(Vector3(start_pos[0], start_pos[1], start_pos[2]), segments)
+	
+	if trajectory.curve.point_count() > 0:
+		create_mesh(trajectory.curve)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
