@@ -36,26 +36,28 @@ func parse_json(path: String) -> Array:
 
 func generate_centerline(start: Vector3, segments: Array) -> Curve3D:
 	var result = Curve3D.new()
+	var direction = Vector3.FORWARD
 	
-	# Intial point of the trajectory
-	var forward = Vector3.FORWARD
+	result.add_point(start)
 	
 	for s in segments:
-		var slope_rad = atan(float(s.slope) / 100.0) # Convert slope % to radians
-		var curve_rad = float(s.length) / float(s.radius) # Angle of the curve
-		var angle_step = point_step / float(s.radius) # New point in track after every angle x
-		
-		for i in range(0, int(curve_rad/angle_step)):
-			# Rotate point to the new pose
-			var rot = Transform3D().rotated(Vector3.UP, angle_step * s.direction)
-			forward = rot.basis * forward
-			# Translate point to the new pose
-			var translation = forward * point_step
-			# Apply slope
-			translation.y -= tan(slope_rad) * point_step
-			# Update position of new point
-			start += translation
+		if is_zero_approx(s.radius):
+			start += direction * s.length
+			start.y += s.length * (s.slope / 100.0)
+			
 			result.add_point(start)
+		else:
+			# Angle of the curve
+			var angle_rad = s.length / s.radius
+			var slope_rad = atan(s.slope / 100.0)
+			var angle_step = point_step / s.radius
+			
+			for i in range(0, int(angle_rad/angle_step)):
+				direction = direction.rotated(Vector3.UP, angle_step * s.turn)
+				
+				start += direction * point_step
+				start.y -= tan(slope_rad) * point_step
+				result.add_point(start)
 	
 	return result
 
