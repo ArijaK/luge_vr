@@ -1,10 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcvdjjjinyced"]
+[gd_scene load_steps=3 format=3 uid="uid://dcvdjjjinyced"]
 
 [ext_resource type="Script" uid="uid://bw0p34kol6enc" path="res://track.gd" id="1_mll3j"]
 
-[node name="Track" type="Node3D"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_mll3j"]
+
+[node name="Track" type="StaticBody3D"]
 script = ExtResource("1_mll3j")
 
 [node name="Path3D" type="Path3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("ArrayMesh_mll3j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.893676, 0)

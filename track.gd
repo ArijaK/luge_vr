@@ -81,38 +81,70 @@ func get_shape_points(shape: PackedVector3Array, T: Transform3D) -> PackedVector
 	return result
 
 
-func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+func create_mesh_surfaces(curve: Curve3D, shape: Array) -> ArrayMesh:
+	var surface_array = []
+	surface_array.resize(Mesh.ARRAY_MAX)
 	
-	var sections = []
-	
+	var vertices = PackedVector3Array()
+	#var uvs = PackedVector2Array()
+	var normals = PackedVector3Array()
+	var indices = PackedInt32Array()
+
 	var line_points = curve.get_baked_points()
-	for i in range(line_points.size()-1):
+	var sections = []
+
+	for i in range(line_points.size() - 1):
 		var p = line_points[i]
-		var p_next = line_points[i+1]
+		var p_next = line_points[i + 1]
 		var T = get_T(p, p_next)
 		sections.append(get_shape_points(shape, T))
-	
-	for i in range(sections.size()-1):
-		var s = sections[i]
-		var s_next = sections[i+1]
-		
-		for j in range(s.size()-1):
-			st.add_vertex(s[j])
-			st.add_vertex(s_next[j])
-			st.add_vertex(s[j+1])
 
-			st.add_vertex(s[j+1])
-			st.add_vertex(s_next[j])
-			st.add_vertex(s_next[j+1])
-	
-	st.generate_normals()
-	return st.commit()
-	
+	for i in range(sections.size() - 1):
+		var s = sections[i]
+		var s_next = sections[i + 1]
+
+		for j in range(s.size() - 1):
+			var base = vertices.size()
+			vertices.append(s[j])
+			vertices.append(s_next[j])
+			vertices.append(s[j + 1])
+
+			indices.append(base)
+			indices.append(base + 1)
+			indices.append(base + 2)
+
+			base = vertices.size()
+			vertices.append(s[j + 1])
+			vertices.append(s_next[j])
+			vertices.append(s_next[j + 1])
+
+			indices.append(base)
+			indices.append(base + 1)
+			indices.append(base + 2)
+
+	for i in range(0, vertices.size(), 3):
+		var a = vertices[i]
+		var b = vertices[i + 1]
+		var c = vertices[i + 2]
+		var n = (b - a).cross(c - a).normalized()
+		normals.append(n)
+		normals.append(n)
+		normals.append(n)
+
+	surface_array[Mesh.ARRAY_VERTEX] = vertices
+	#surface_array[Mesh.ARRAY_TEX_UV] = uvs
+	surface_array[Mesh.ARRAY_NORMAL] = normals
+	surface_array[Mesh.ARRAY_INDEX] = indices
+
+	var mesh = ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface_array)
+
+	return mesh
+
 
 @onready var trajectory = $Path3D
-@onready var mesh = $MeshInstance3D
+@onready var mesh_instance = $MeshInstance3D
+@onready var collision_shape = $CollisionShape3D
 
 
 func _ready() -> void:
@@ -121,10 +153,14 @@ func _ready() -> void:
 	var start_pos = cfg.get_value("track", "start_pos")
 	var track_shape = get_track_shape(data["track_shape"])
 	
-	trajectory.curve = create_centerline(Vector3(start_pos[0], start_pos[1], start_pos[2]), data["segments"])
+	trajectory.curve = create_centerline(
+		Vector3(start_pos[0], start_pos[1], start_pos[2]), 
+		data["segments"]
+	)
 	
 	if trajectory.curve.point_count > 0:
-		mesh.mesh = create_mesh(trajectory.curve, track_shape)
+		mesh_instance.mesh = create_mesh_surfaces(trajectory.curve, track_shape)
+		mesh_instance.create_trimesh_collision()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
