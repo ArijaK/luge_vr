@@ -14,27 +14,27 @@ func load_config(path: String) -> ConfigFile:
 		return
 
 
-func parse_json(path: String) -> Array:
+func parse_json(path: String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		push_error("Cannot open file " + path)
-		return []
+		return
 	
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
 	if error == OK:
 		var data = json.data
 		if typeof(data) == TYPE_DICTIONARY:
-			return data["segments"]
+			return data
 		else:
 			push_error("Unexpected data format")
-			return []
+			return
 	else:
 		push_error("JSON Parse Error: ", json.get_error_message(), " at line ", json.get_error_line())
-		return []
+		return
 
 
-func generate_centerline(start: Vector3, segments: Array) -> Curve3D:
+func create_centerline(start: Vector3, segments: Array) -> Curve3D:
 	var result = Curve3D.new()
 	var direction = Vector3.FORWARD
 	
@@ -62,98 +62,55 @@ func generate_centerline(start: Vector3, segments: Array) -> Curve3D:
 	return result
 
 
-func create_mesh(curve: Curve3D) -> void:
+func get_track_shape(points: Array) -> PackedVector3Array:
+	var result = PackedVector3Array()
+	for p in points:
+		result.append(Vector3(p[0], p[1], p[2]))	
+	return result
+
+
+func get_T(p1: Vector3, p2: Vector3) -> Transform3D:
+	var forward = (p2 - p1).normalized()
+	var right = forward.cross(Vector3.UP).normalized()
+	return Transform3D( Basis(right, Vector3.UP, forward), p1)
+
+
+func get_shape_points(shape: PackedVector3Array, T: Transform3D) -> PackedVector3Array:
+	var result = PackedVector3Array()
+	for p in shape:
+		result.append(T * p)
+	return result
+
+
+func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
-	# NOTE: Currently HARD coded, later may be added to config file
-	var length := curve.get_baked_length()
-	var steps := 200
+	var sections = []
+	
+	var line_points = curve.get_baked_points()
+	for i in range(line_points.size()-1):
+		var p = line_points[i]
+		var p_next = line_points[i+1]
+		var T = get_T(p, p_next)
+		sections.append(get_shape_points(shape, T))
+	
+	for i in range(sections.size()-1):
+		var s = sections[i]
+		var s_next = sections[i+1]
+		
+		for j in range(s.size()-1):
+			st.add_vertex(s[j])
+			st.add_vertex(s_next[j])
+			st.add_vertex(s[j+1])
 
-	# NOTE: Not the expected end result
-	var width := 2.0
-	var height := 0.2
-	var half_w := width * 0.5
-	var half_h := height * 0.5
-
-	var prev = null
-
-	for i in steps + 1:
-		var t := float(i) / steps
-		var d := t * length
-
-		var pos = curve.sample_baked(d)
-
-		# Tangent
-		var ahead = curve.sample_baked(d + 0.1)
-		var tangent = (ahead - pos).normalized()
-
-		# Up vector from curve
-		var up = curve.sample_baked_up_vector(d)
-
-		# Right + corrected normal
-		var right = tangent.cross(up).normalized()
-		var normal = right.cross(tangent).normalized()
-
-		# Rectangle corners
-		var lt = pos - right * half_w + normal * half_h
-		var rt = pos + right * half_w + normal * half_h
-		var lb = pos - right * half_w - normal * half_h
-		var rb = pos + right * half_w - normal * half_h
-
-		if prev != null:
-			var p_lt = prev.lt
-			var p_rt = prev.rt
-			var p_lb = prev.lb
-			var p_rb = prev.rb
-
-			# Top
-			st.add_vertex(p_lt)
-			st.add_vertex(p_rt)
-			st.add_vertex(rt)
-
-			st.add_vertex(p_lt)
-			st.add_vertex(rt)
-			st.add_vertex(lt)
-
-			# Bottom
-			st.add_vertex(p_lb)
-			st.add_vertex(rb)
-			st.add_vertex(p_rb)
-
-			st.add_vertex(p_lb)
-			st.add_vertex(lb)
-			st.add_vertex(rb)
-
-			# Left side
-			st.add_vertex(p_lb)
-			st.add_vertex(p_lt)
-			st.add_vertex(lt)
-
-			st.add_vertex(p_lb)
-			st.add_vertex(lt)
-			st.add_vertex(lb)
-
-			# Right side
-			st.add_vertex(p_rb)
-			st.add_vertex(rt)
-			st.add_vertex(p_rt)
-
-			st.add_vertex(p_rb)
-			st.add_vertex(rb)
-			st.add_vertex(rt)
-
-		prev = {
-			"lt": lt,
-			"rt": rt,
-			"lb": lb,
-			"rb": rb
-		}
-
+			st.add_vertex(s[j+1])
+			st.add_vertex(s_next[j])
+			st.add_vertex(s_next[j+1])
+	
 	st.generate_normals()
-	var new_mesh = st.commit()
-	mesh.mesh = new_mesh
-
+	return st.commit()
+	
 
 @onready var trajectory = $Path3D
 @onready var mesh = $MeshInstance3D
@@ -161,13 +118,14 @@ func create_mesh(curve: Curve3D) -> void:
 
 func _ready() -> void:
 	var cfg = load_config("res://config.cfg")
-	var segments = parse_json(cfg.get_value("track", "segments_path"))
+	var data = parse_json(cfg.get_value("track", "segments_path"))
 	var start_pos = cfg.get_value("track", "start_pos")
+	var track_shape = get_track_shape(data["track_shape"])
 	
-	trajectory.curve = generate_centerline(Vector3(start_pos[0], start_pos[1], start_pos[2]), segments)
+	trajectory.curve = create_centerline(Vector3(start_pos[0], start_pos[1], start_pos[2]), data["segments"])
 	
 	if trajectory.curve.point_count > 0:
-		create_mesh(trajectory.curve)
+		mesh.mesh = create_mesh(trajectory.curve, track_shape)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
