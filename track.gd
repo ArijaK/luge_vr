@@ -1,6 +1,5 @@
 class_name TrackGenerator extends Node3D
 
-@export var mesh_steps = 200  # How many segments to make
 @export var point_step = 1    # New point in track after every meter
 
 
