@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dckstqrm1gltx"]
+[gd_scene load_steps=8 format=3 uid="uid://dckstqrm1gltx"]
 
 [ext_resource type="PackedScene" uid="uid://dcvdjjjinyced" path="res://track.tscn" id="1_f3sb7"]
 [ext_resource type="PackedScene" uid="uid://dlurk0ajee0mn" path="res://player.tscn" id="2_fj7yv"]
@@ -24,23 +24,10 @@ background_mode = 2
 background_energy_multiplier = 3.0
 sky = SubResource("Sky_gv5m4")
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_f3sb7"]
-
 [node name="World" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_f3sb7")
-
-[node name="Ground" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("WorldBoundaryShape3D_gv5m4")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-visible = false
-mesh = SubResource("PlaneMesh_f3sb7")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.008133127, 0.9999669, 0, -0.9999669, -0.008133127, 0, 1.5550474, 0)
