@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dckstqrm1gltx"]
+[gd_scene load_steps=9 format=3 uid="uid://dckstqrm1gltx"]
 
 [ext_resource type="PackedScene" uid="uid://dcvdjjjinyced" path="res://track.tscn" id="1_f3sb7"]
 [ext_resource type="PackedScene" uid="uid://dlurk0ajee0mn" path="res://player.tscn" id="2_fj7yv"]
+[ext_resource type="Script" uid="uid://cq01ccy5h6682" path="res://camera_3d.gd" id="3_tlwt5"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.13151927, 0.42630386, 0.95464855)
@@ -29,14 +30,15 @@ sky = SubResource("Sky_gv5m4")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_f3sb7")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.008133127, 0.9999669, 0, -0.9999669, -0.008133127, 0, 1.5550474, 0)
-
-[node name="Track" parent="." instance=ExtResource("1_f3sb7")]
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.3773363, 0)
 shadow_enabled = true
 
+[node name="Track" parent="." instance=ExtResource("1_f3sb7")]
+
 [node name="Player" parent="." instance=ExtResource("2_fj7yv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4.2891326)
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("follow_target")]
+script = ExtResource("3_tlwt5")
+follow_target = NodePath("../Player")
