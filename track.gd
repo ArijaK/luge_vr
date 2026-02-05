@@ -1,4 +1,4 @@
-class_name TrackGenerator extends Node3D
+class_name TrackGenerator extends StaticBody3D
 
 @export var point_step = 1    # New point in track after every meter
 
@@ -81,7 +81,7 @@ func get_shape_points(shape: PackedVector3Array, T: Transform3D) -> PackedVector
 	return result
 
 
-func create_mesh_surfaces(curve: Curve3D, shape: Array) -> ArrayMesh:
+func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 	var surface_array = []
 	surface_array.resize(Mesh.ARRAY_MAX)
 	
@@ -159,7 +159,7 @@ func _ready() -> void:
 	)
 	
 	if trajectory.curve.point_count > 0:
-		mesh_instance.mesh = create_mesh_surfaces(trajectory.curve, track_shape)
+		mesh_instance.mesh = create_mesh(trajectory.curve, track_shape)
 		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
 
 
