@@ -160,7 +160,7 @@ func _ready() -> void:
 	
 	if trajectory.curve.point_count > 0:
 		mesh_instance.mesh = create_mesh_surfaces(trajectory.curve, track_shape)
-		mesh_instance.create_trimesh_collision()
+		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
