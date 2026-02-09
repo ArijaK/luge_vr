@@ -161,6 +161,13 @@ func _ready() -> void:
 	if trajectory.curve.point_count > 0:
 		mesh_instance.mesh = create_mesh(trajectory.curve, track_shape)
 		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
+		
+		var material = StandardMaterial3D.new()
+		material.albedo_color = Color(0.8, 0.9, 1.0)
+		material.roughness = 0.05
+		material.metallic = 0.0
+		
+		mesh_instance.set_surface_override_material(0, material)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
