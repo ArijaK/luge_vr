@@ -86,7 +86,7 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 	surface_array.resize(Mesh.ARRAY_MAX)
 	
 	var vertices = PackedVector3Array()
-	#var uvs = PackedVector2Array()
+	var uvs = PackedVector2Array()
 	var normals = PackedVector3Array()
 	var indices = PackedInt32Array()
 
@@ -103,16 +103,30 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 		var s = sections[i]
 		var s_next = sections[i + 1]
 
+		var v1 = float(i) / (sections.size() - 1)
+		var v2 = float(i + 1) / (sections.size() - 1)
+
 		for j in range(s.size() - 1):
+			var u1 = float(j) / (s.size() - 1)
+			var u2 = float(j + 1) / (s.size() - 1)
+			
 			var base = vertices.size()
 
 			vertices.append(s[j])
 			vertices.append(s_next[j])
 			vertices.append(s[j + 1])
+			
+			uvs.append(Vector2(u1, v1))
+			uvs.append(Vector2(u1, v2))
+			uvs.append(Vector2(u2, v1))
 
 			vertices.append(s[j + 1])
 			vertices.append(s_next[j])
 			vertices.append(s_next[j + 1])
+			
+			uvs.append(Vector2(u2, v1))
+			uvs.append(Vector2(u1, v2))
+			uvs.append(Vector2(u2, v2))
 
 			indices.append_array(range(base, base+6))
 
@@ -124,7 +138,7 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 		normals.append_array([n, n, n])
 
 	surface_array[Mesh.ARRAY_VERTEX] = vertices
-	#surface_array[Mesh.ARRAY_TEX_UV] = uvs
+	surface_array[Mesh.ARRAY_TEX_UV] = uvs
 	surface_array[Mesh.ARRAY_NORMAL] = normals
 	surface_array[Mesh.ARRAY_INDEX] = indices
 
@@ -155,7 +169,7 @@ func _ready() -> void:
 		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
 		
 		var material = StandardMaterial3D.new()
-		material.albedo_color = Color(0.8, 0.9, 1.0)
+		material.albedo_color = Color(0.589, 0.004, 0.92, 1.0)
 		material.roughness = 0.05
 		material.metallic = 0.0
 		
