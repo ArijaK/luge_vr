@@ -105,31 +105,23 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 
 		for j in range(s.size() - 1):
 			var base = vertices.size()
+
 			vertices.append(s[j])
 			vertices.append(s_next[j])
 			vertices.append(s[j + 1])
 
-			indices.append(base)
-			indices.append(base + 1)
-			indices.append(base + 2)
-
-			base = vertices.size()
 			vertices.append(s[j + 1])
 			vertices.append(s_next[j])
 			vertices.append(s_next[j + 1])
 
-			indices.append(base)
-			indices.append(base + 1)
-			indices.append(base + 2)
+			indices.append_array(range(base, base+6))
 
 	for i in range(0, vertices.size(), 3):
 		var a = vertices[i]
 		var b = vertices[i + 1]
 		var c = vertices[i + 2]
 		var n = (b - a).cross(c - a).normalized()
-		normals.append(n)
-		normals.append(n)
-		normals.append(n)
+		normals.append_array([n, n, n])
 
 	surface_array[Mesh.ARRAY_VERTEX] = vertices
 	#surface_array[Mesh.ARRAY_TEX_UV] = uvs
