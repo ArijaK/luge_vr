@@ -96,15 +96,30 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 		var s = sections[i]
 		var s_next = sections[i + 1]
 		
+		var v1 = float(i) / (sections.size() - 1)
+		var v2 = float(i + 1) / (sections.size() - 1)
+		
 		for j in range(s.size() - 1):
+			var u1 = float(j) / (s.size() - 1)
+			var u2 = float(j + 1) / (s.size() - 1)
+			
+			st.set_uv(Vector2(u1, v1))
+			st.set_uv(Vector2(u1, v2))
+			st.set_uv(Vector2(u2, v1))
+			
 			st.add_vertex(s[j])
 			st.add_vertex(s_next[j])
 			st.add_vertex(s[j + 1])
-	
+			
+			st.set_uv(Vector2(u2, v1))
+			st.set_uv(Vector2(u1, v2))
+			st.set_uv(Vector2(u2, v2))
+			
 			st.add_vertex(s[j + 1])
 			st.add_vertex(s_next[j])
 			st.add_vertex(s_next[j + 1])
 			
+
 	st.index()
 	st.generate_normals()
 	st.generate_tangents()
