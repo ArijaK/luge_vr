@@ -1,6 +1,6 @@
 class_name TrackGenerator extends StaticBody3D
 
-@export var point_step = 1    # New point in track after every meter
+@export var point_step = 0.2    # New point in track after every meter
 
 
 func load_config(path: String) -> ConfigFile:
@@ -82,14 +82,9 @@ func get_shape_points(shape: PackedVector3Array, T: Transform3D) -> PackedVector
 
 
 func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
-	var surface_array = []
-	surface_array.resize(Mesh.ARRAY_MAX)
-	
-	var vertices = PackedVector3Array()
-	var uvs = PackedVector2Array()
-	var normals = PackedVector3Array()
-	var indices = PackedInt32Array()
-
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		
 	var line_points = curve.get_baked_points()
 	var sections = []
 
@@ -102,50 +97,97 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 	for i in range(sections.size() - 1):
 		var s = sections[i]
 		var s_next = sections[i + 1]
-
-		var v1 = float(i) / (sections.size() - 1)
-		var v2 = float(i + 1) / (sections.size() - 1)
-
+		
 		for j in range(s.size() - 1):
-			var u1 = float(j) / (s.size() - 1)
-			var u2 = float(j + 1) / (s.size() - 1)
+			st.add_vertex(s[j])
+			st.add_vertex(s_next[j])
+			st.add_vertex(s[j + 1])
+	
+			st.add_vertex(s[j + 1])
+			st.add_vertex(s_next[j])
+			st.add_vertex(s_next[j + 1])
 			
-			var base = vertices.size()
-
-			vertices.append(s[j])
-			vertices.append(s_next[j])
-			vertices.append(s[j + 1])
-			
-			uvs.append(Vector2(u1, v1))
-			uvs.append(Vector2(u1, v2))
-			uvs.append(Vector2(u2, v1))
-
-			vertices.append(s[j + 1])
-			vertices.append(s_next[j])
-			vertices.append(s_next[j + 1])
-			
-			uvs.append(Vector2(u2, v1))
-			uvs.append(Vector2(u1, v2))
-			uvs.append(Vector2(u2, v2))
-
-			indices.append_array(range(base, base+6))
-
-	for i in range(0, vertices.size(), 3):
-		var a = vertices[i]
-		var b = vertices[i + 1]
-		var c = vertices[i + 2]
-		var n = (b - a).cross(c - a).normalized()
-		normals.append_array([n, n, n])
-
-	surface_array[Mesh.ARRAY_VERTEX] = vertices
-	surface_array[Mesh.ARRAY_TEX_UV] = uvs
-	surface_array[Mesh.ARRAY_NORMAL] = normals
-	surface_array[Mesh.ARRAY_INDEX] = indices
-
-	var mesh = ArrayMesh.new()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface_array)
-
-	return mesh
+	st.index()
+	st.generate_normals()
+	st.generate_tangents()
+	return st.commit()
+	#var surface_array = []
+	#surface_array.resize(Mesh.ARRAY_MAX)
+	#
+	#var vertices = PackedVector3Array()
+	#var uvs = PackedVector2Array()
+	#var normals = PackedVector3Array()
+	#var indices = PackedInt32Array()
+#
+	#var line_points = curve.get_baked_points()
+	#var sections = []
+#
+	#for i in range(line_points.size() - 1):
+		#var p = line_points[i]
+		#var p_next = line_points[i + 1]
+		#var T = get_T(p, p_next)
+		#sections.append(get_shape_points(shape, T))
+#
+	#for i in range(sections.size() - 1):
+		#var s = sections[i]
+		#var s_next = sections[i + 1]
+#
+		#var v1 = float(i) / (sections.size() - 1)
+		#var v2 = float(i + 1) / (sections.size() - 1)
+#
+		#for j in range(s.size() - 1):
+			#var u1 = float(j) / (s.size() - 1)
+			#var u2 = float(j + 1) / (s.size() - 1)
+			#
+			#var base = vertices.size()
+#
+			#vertices.append(s[j])
+			#vertices.append(s_next[j])
+			#vertices.append(s[j + 1])
+			#
+			#normals.append(s[j].normalized())
+			#normals.append(s_next[j].normalized())
+			#normals.append(s[j + 1].normalized())
+			#
+			#uvs.append(Vector2(u1, v1))
+			#uvs.append(Vector2(u1, v2))
+			#uvs.append(Vector2(u2, v1))
+#
+			#vertices.append(s[j + 1])
+			#vertices.append(s_next[j])
+			#vertices.append(s_next[j + 1])
+			#
+			#normals.append(s[j].normalized())
+			#normals.append(s_next[j].normalized())
+			#normals.append(s[j + 1].normalized())
+			#
+			#uvs.append(Vector2(u2, v1))
+			#uvs.append(Vector2(u1, v2))
+			#uvs.append(Vector2(u2, v2))
+			#
+			#indices.append_array(range(base, base+6))
+#
+	##var n = Vector3.ZERO
+	##for i in range(0, vertices.size(), 3):
+		##var a = vertices[i]
+		##var b = vertices[i + 1]
+		##var c = vertices[i + 2]
+		##
+		##n = (b - a).cross(c - a).normalized()
+		##normals.append_array([
+			##n.normalized(), 
+			##(n+n).normalized(), 
+			##(n+n+n).normalized()
+		##])
+#
+	#surface_array[Mesh.ARRAY_VERTEX] = vertices
+	#surface_array[Mesh.ARRAY_TEX_UV] = uvs
+	#surface_array[Mesh.ARRAY_NORMAL] = normals
+	#surface_array[Mesh.ARRAY_INDEX] = indices
+#
+	#var mesh = ArrayMesh.new()
+	#mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface_array)
+	#return mesh
 
 
 @onready var trajectory = $Path3D
