@@ -1,10 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://dcvdjjjinyced"]
+[gd_scene load_steps=6 format=3 uid="uid://dcvdjjjinyced"]
 
 [ext_resource type="Script" uid="uid://bw0p34kol6enc" path="res://track.gd" id="1_mll3j"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mll3j"]
 friction = 0.05
 bounce = 0.1
+
+[sub_resource type="Curve3D" id="Curve3D_mll3j"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_mll3j"]
 
@@ -15,6 +17,7 @@ physics_material_override = SubResource("PhysicsMaterial_mll3j")
 script = ExtResource("1_mll3j")
 
 [node name="Path3D" type="Path3D" parent="."]
+curve = SubResource("Curve3D_mll3j")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_mll3j")

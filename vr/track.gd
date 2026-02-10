@@ -1,7 +1,5 @@
 class_name TrackGenerator extends StaticBody3D
 
-@export var point_step = 0.2    # New point in track after every meter
-
 
 func load_config(path: String) -> ConfigFile:
 	var cfg = ConfigFile.new()
@@ -49,13 +47,13 @@ func create_centerline(start: Vector3, segments: Array) -> Curve3D:
 			# Angle of the curve
 			var angle_rad = s.length / s.radius
 			var slope_rad = atan(s.slope / 100.0)
-			var angle_step = point_step / s.radius
+			var angle_step = result.bake_interval / s.radius
 			
 			for i in range(0, int(angle_rad/angle_step)):
 				direction = direction.rotated(Vector3.UP, angle_step * s.turn)
 				
-				start += direction * point_step
-				start.y -= tan(slope_rad) * point_step
+				start += direction * result.bake_interval
+				start.y -= tan(slope_rad) * result.bake_interval
 				result.add_point(start)
 	
 	return result
