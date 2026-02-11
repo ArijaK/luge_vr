@@ -1,4 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dlurk0ajee0mn"]
+[gd_scene load_steps=6 format=3 uid="uid://dlurk0ajee0mn"]
+
+[ext_resource type="Script" uid="uid://w4mduqs027ip" path="res://player.gd" id="1_4flbx"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4flbx"]
+friction = 0.5
 
 [sub_resource type="SphereMesh" id="SphereMesh_sh265"]
 
@@ -8,6 +13,8 @@ albedo_color = Color(1, 0.007843138, 0.2627451, 1)
 [sub_resource type="SphereShape3D" id="SphereShape3D_4flbx"]
 
 [node name="Player" type="RigidBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_4flbx")
+script = ExtResource("1_4flbx")
 
 [node name="Node3D" type="Node3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
