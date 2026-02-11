@@ -1,28 +1,19 @@
-[gd_scene load_steps=9 format=3 uid="uid://dckstqrm1gltx"]
+[gd_scene load_steps=8 format=3 uid="uid://dckstqrm1gltx"]
 
+[ext_resource type="Texture2D" uid="uid://bf0tsgtl1dp6r" path="res://images/pexels-marcelo-mora-203572590-31716807.jpg" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://dcvdjjjinyced" path="res://track.tscn" id="1_f3sb7"]
 [ext_resource type="PackedScene" uid="uid://dlurk0ajee0mn" path="res://player.tscn" id="2_fj7yv"]
 [ext_resource type="Script" uid="uid://cq01ccy5h6682" path="res://camera_3d.gd" id="3_tlwt5"]
 
-[sub_resource type="Gradient" id="Gradient_gv5m4"]
-offsets = PackedFloat32Array(0.13151927, 0.42630386, 0.95464855)
-colors = PackedColorArray(0.10215483, 0.23404971, 0.5502634, 1, 0.01504388, 0.091585495, 0.24725124, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_f3sb7"]
-gradient = SubResource("Gradient_gv5m4")
-fill_from = Vector2(0.48290598, 0.042735044)
-fill_to = Vector2(0.47863248, 0.94017094)
-
-[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_gv5m4"]
-night_sky = SubResource("GradientTexture2D_f3sb7")
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_tlwt5"]
+panorama = ExtResource("1_aqk2v")
+energy_multiplier = 0.7
 
 [sub_resource type="Sky" id="Sky_gv5m4"]
-sky_material = SubResource("PhysicalSkyMaterial_gv5m4")
-radiance_size = 0
+sky_material = SubResource("PanoramaSkyMaterial_tlwt5")
 
 [sub_resource type="Environment" id="Environment_f3sb7"]
 background_mode = 2
-background_energy_multiplier = 3.0
 sky = SubResource("Sky_gv5m4")
 
 [node name="World" type="Node3D"]
