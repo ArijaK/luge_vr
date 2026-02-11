@@ -32,7 +32,7 @@
 	{ "length": 40.0,     "radius": 0.0,  "slope": 0.0, "turn": 1 },
 	{ "length": 31.4159,  "radius": 20.0, "slope": 0.0, "turn": -1 }
   ],
-  "segments": [
+  "helix": [
 	{ "length": 15.70796, "radius": 20.0, "slope": 8.0, "turn": -1 },
 	{ "length": 15.70796, "radius": 20.0, "slope": 8.0, "turn": -1 },
 	{ "length": 15.70796, "radius": 20.0, "slope": 10.0, "turn": -1 },

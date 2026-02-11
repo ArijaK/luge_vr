@@ -1,0 +1,38 @@
+{
+  "track_shape": [
+	[-1.15, 0.25, 0.0],
+	[-0.65, 0.25, 0.0],
+	[-0.65, 0.0, 0.0],
+	[0.0, 0.0, 0.0],
+	[0.65, 0.0, 0.0],
+	[0.65, 0.25, 0.0],
+	[1.15, 0.25, 0.0]
+  ],
+  "segments": [
+	{ "length": 7.00, "radius": 0.0, "slope": 0.0, "turn": -1 },
+	{ "length": 15.00, "radius": 0.0, "slope": 2.0, "turn": -1 },
+	{ "length": 92.00, "radius": 0.0, "slope": 12.00, "turn": -1 },
+	{ "length": 45.00, "radius": 0.0, "slope": 6.4444, "turn": -1 },
+	{ "length": 38.00, "radius": 0.0, "slope": 18.0000, "turn": -1 },
+	{ "length": 90.00, "radius": 0.0, "slope": 7.0000, "turn": -1 },
+	{ "length": 100.00, "radius": 0.0, "slope": 11.0000, "turn": -1 },
+	{ "length": 85.00, "radius": 0.0, "slope": 2.0000, "turn": -1 },
+	{ "length": 60.00, "radius": 0.0, "slope": 15.0000, "turn": -1 },
+	{ "length": 45.00, "radius": 0.0, "slope": 3.0000, "turn": -1 },
+	{ "length": 97.50, "radius": 0.0, "slope": 14.0000, "turn": -1 },
+	{ "length": 62.50, "radius": 0.0, "slope": 2.0000, "turn": -1 },
+	{ "length": 60.00, "radius": 0.0, "slope": 16.0000, "turn": -1 },
+	{ "length": 70.00, "radius": 0.0, "slope": 10.0000, "turn": -1 },
+	{ "length": 40.00, "radius": 0.0, "slope": 16.0000, "turn": -1 },
+	{ "length": 94.00, "radius": 0.0, "slope": 12.0000, "turn": -1 },
+	{ "length": 31.00, "radius": 0.0, "slope": -2.0000, "turn": -1 },
+	{ "length": 55.00, "radius": 0.0, "slope": -8.0000, "turn": -1 },
+	{ "length": 35.00, "radius": 0.0, "slope": -2.0000, "turn": -1 },
+	{ "length": 30.00, "radius": 0.0, "slope": 8.0000, "turn": -1 },
+	{ "length": 45.00, "radius": 0.0, "slope": 17.0000, "turn": -1 },
+	{ "length": 85.00, "radius": 0.0, "slope": 4.0000, "turn": -1 },
+	{ "length": 60.00, "radius": 0.0, "slope": -2.5000, "turn": -1 },
+	{ "length": 70.00, "radius": 0.0, "slope": -10.0000, "turn": -1 },
+	{ "length": 65.00, "radius": 0.0, "slope": -16.0000, "turn": -1 },
+  ]
+}
