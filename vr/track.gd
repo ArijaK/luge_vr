@@ -40,7 +40,7 @@ func create_centerline(start: Vector3, segments: Array) -> Curve3D:
 	for s in segments:
 		if is_zero_approx(s.radius):
 			start += direction * s.length
-			start.y += s.length * (s.slope / 100.0)
+			start.y -= s.length * (s.slope / 100.0)
 			
 			result.add_point(start)
 		else:
@@ -66,10 +66,11 @@ func get_track_shape(points: Array) -> PackedVector3Array:
 	return result
 
 
-func get_T(p1: Vector3, p2: Vector3) -> Transform3D:
+func get_T(p1: Vector3, p2: Vector3, current_up: Vector3) -> Transform3D:
 	var forward = (p2 - p1).normalized()
+	var up = (current_up - forward * current_up.dot(forward)).normalized()
 	var right = forward.cross(Vector3.UP).normalized()
-	return Transform3D( Basis(right, Vector3.UP, forward), p1)
+	return Transform3D( Basis(right, up, forward), p1)
 
 
 func get_shape_points(shape: PackedVector3Array, T: Transform3D) -> PackedVector3Array:
@@ -85,12 +86,15 @@ func create_mesh(curve: Curve3D, shape: Array) -> ArrayMesh:
 		
 	var line_points = curve.get_baked_points()
 	var sections = []
-
+	
+	var up = Vector3.UP
 	for i in range(line_points.size() - 1):
 		var p = line_points[i]
 		var p_next = line_points[i + 1]
-		var T = get_T(p, p_next)
+		var T = get_T(p, p_next, up)
+		
 		sections.append(get_shape_points(shape, T))
+		up = T.basis.y
 
 	for i in range(sections.size() - 1):
 		var s = sections[i]
