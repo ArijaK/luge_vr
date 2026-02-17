@@ -9,87 +9,87 @@
 	[1.15, 0.25, 0.0]
   ],
   "segments": [
-	{ "length": 7.00, "radius": 0.0, "slope": -0.0, "turn": -1 },
+	{ "length": 7.00, "radius": 0.0, "slope": 0.0, "turn": 1 },
 
-	{ "length": 15.00, "radius": 0.0, "slope": -2.0, "turn": -1 },
+	{ "length": 15.00, "radius": 0.0, "slope": -2.0, "turn": 1 },
 
-	{ "length": 80.50, "radius": 0.0, "slope": -12.00, "turn": -1 },
-	{ "length": 11.50, "radius": 17.0, "slope": -12.00, "turn": -1 },
+	{ "length": 80.50, "radius": 0.0, "slope": -12.00, "turn": 1 },
+	{ "length": 11.50, "radius": 17.0, "slope": -12.00, "turn": 1 },
 
-	{ "length": 20.50, "radius": 17.0, "slope": -6.4444, "turn": -1 },
-	{ "length": 8.50, "radius": 0.0, "slope": -6.4444, "turn": -1 },
-	{ "length": 16.00, "radius": 15.0, "slope": -6.4444, "turn": 1 },
+	{ "length": 20.50, "radius": 17.0, "slope": -6.4444, "turn": 1 },
+	{ "length": 8.50, "radius": 0.0, "slope": -6.4444, "turn": 1 },
+	{ "length": 16.00, "radius": 15.0, "slope": -6.4444, "turn": -1 },
 
-	{ "length": 24.50, "radius": 15.0, "slope": -18.0000, "turn": 1 },
-	{ "length": 13.50, "radius": 0.0, "slope": -18.0000, "turn": -1 },
+	{ "length": 24.50, "radius": 15.0, "slope": -18.0000, "turn": -1 },
+	{ "length": 13.50, "radius": 0.0, "slope": -18.0000, "turn": 1 },
 
-	{ "length": 6.50, "radius": 0.0, "slope": -7.0000, "turn": -1 },
-	{ "length": 80.50, "radius": 21.4, "slope": -7.0000, "turn": -1 },
-	{ "length": 3.00, "radius": 0.0, "slope": -7.0000, "turn": -1 },
+	{ "length": 6.50, "radius": 0.0, "slope": -7.0000, "turn": 1 },
+	{ "length": 80.50, "radius": 21.4, "slope": -7.0000, "turn": 1 },
+	{ "length": 3.00, "radius": 0.0, "slope": -7.0000, "turn": 1 },
 
-	{ "length": 12.00, "radius": 0.0, "slope": -11.0000, "turn": -1 },
-	{ "length": 44.50, "radius": 30.0, "slope": -11.0000, "turn": 1 },
-	{ "length": 40.00, "radius": 0.0, "slope": -11.0000, "turn": -1 },
-	{ "length": 3.50, "radius": 35.0, "slope": -11.0000, "turn": -1 },
+	{ "length": 12.00, "radius": 0.0, "slope": -11.0000, "turn": 1 },
+	{ "length": 44.50, "radius": 30.0, "slope": -11.0000, "turn": -1 },
+	{ "length": 40.00, "radius": 0.0, "slope": -11.0000, "turn": 1 },
+	{ "length": 3.50, "radius": 35.0, "slope": -11.0000, "turn": 1 },
 
-	{ "length": 53.50, "radius": 35.0, "slope": -2.0000, "turn": -1 },
-	{ "length": 13.00, "radius": 0.0, "slope": -2.0000, "turn": -1 },
-	{ "length": 18.50, "radius": 23.0, "slope": -2.0000, "turn": 1 },
+	{ "length": 53.50, "radius": 35.0, "slope": -2.0000, "turn": 1 },
+	{ "length": 13.00, "radius": 0.0, "slope": -2.0000, "turn": 1 },
+	{ "length": 18.50, "radius": 23.0, "slope": -2.0000, "turn": -1 },
 
-	{ "length": 33.00, "radius": 23.0, "slope": -15.0000, "turn": 1 },
-	{ "length": 21.00, "radius": 0.0, "slope": -15.0000, "turn": -1 },
-	{ "length": 6.00, "radius": 21.0, "slope": -15.0000, "turn": -1 },
+	{ "length": 33.00, "radius": 23.0, "slope": -15.0000, "turn": -1 },
+	{ "length": 21.00, "radius": 0.0, "slope": -15.0000, "turn": 1 },
+	{ "length": 6.00, "radius": 21.0, "slope": -15.0000, "turn": 1 },
 
-	{ "length": 45.00, "radius": 21.0, "slope": -3.0000, "turn": -1 },
+	{ "length": 45.00, "radius": 21.0, "slope": -3.0000, "turn": 1 },
 
-	{ "length": 6.00, "radius": 21.0, "slope": -14.0000, "turn": -1 },
-	{ "length": 11.50, "radius": 0.0, "slope": -14.0000, "turn": -1 },
-	{ "length": 80.00, "radius": 21.0, "slope": -14.0000, "turn": 1 },
+	{ "length": 6.00, "radius": 21.0, "slope": -14.0000, "turn": 1 },
+	{ "length": 11.50, "radius": 0.0, "slope": -14.0000, "turn": 1 },
+	{ "length": 80.00, "radius": 21.0, "slope": -14.0000, "turn": -1 },
 
-	{ "length": 5.00, "radius": 21.0, "slope": -2.0000, "turn": 1 },
-	{ "length": 11.50, "radius": 0.0, "slope": -2.0000, "turn": -1 },
-	{ "length": 46.00, "radius": 140.0, "slope": -2.0000, "turn": -1 },
+	{ "length": 5.00, "radius": 21.0, "slope": -2.0000, "turn": -1 },
+	{ "length": 11.50, "radius": 0.0, "slope": -2.0000, "turn": 1 },
+	{ "length": 46.00, "radius": 140.0, "slope": -2.0000, "turn": 1 },
 
-	{ "length": 40.00, "radius": 140.0, "slope": -16.0000, "turn": -1 },
-	{ "length": 20.00, "radius": 0.0, "slope": -16.0000, "turn": -1 },
+	{ "length": 40.00, "radius": 140.0, "slope": -16.0000, "turn": 1 },
+	{ "length": 20.00, "radius": 0.0, "slope": -16.0000, "turn": 1 },
 
-	{ "length": 30.00, "radius": 0.0, "slope": -10.0000, "turn": -1 },
-	{ "length": 40.00, "radius": 29.0, "slope": -10.0000, "turn": -1 },
+	{ "length": 30.00, "radius": 0.0, "slope": -10.0000, "turn": 1 },
+	{ "length": 40.00, "radius": 29.0, "slope": -10.0000, "turn": 1 },
 
-	{ "length": 37.00, "radius": 29.0, "slope": -16.0000, "turn": -1 },
-	{ "length": 3.00, "radius": 0.0, "slope": -16.0000, "turn": -1 },
+	{ "length": 37.00, "radius": 29.0, "slope": -16.0000, "turn": 1 },
+	{ "length": 3.00, "radius": 0.0, "slope": -16.0000, "turn": 1 },
 
-	{ "length": 8.00, "radius": 0.0, "slope": -12.0000, "turn": -1 },
-	{ "length": 86.00, "radius": 33.5, "slope": -12.0000, "turn": 1 },
+	{ "length": 8.00, "radius": 0.0, "slope": -12.0000, "turn": 1 },
+	{ "length": 86.00, "radius": 33.5, "slope": -12.0000, "turn": -1 },
 
-	{ "length": 31.00, "radius": 33.5, "slope": 2.0000, "turn": 1 },
+	{ "length": 31.00, "radius": 33.5, "slope": 2.0000, "turn": -1 },
 
-	{ "length": 31.00, "radius": 33.5, "slope": 8.0000, "turn": 1 },
-	{ "length": 24.00, "radius": 0.0, "slope": 8.0000, "turn": -1 },
+	{ "length": 31.00, "radius": 33.5, "slope": 8.0000, "turn": -1 },
+	{ "length": 24.00, "radius": 0.0, "slope": 8.0000, "turn": 1 },
 
-	{ "length": 7.00, "radius": 0.0, "slope": 2.0000, "turn": -1 },
-	{ "length": 10.50, "radius": 400.0, "slope": 2.0000, "turn": 1 },
-	{ "length": 6.50, "radius": 0.0, "slope": 2.0000, "turn": -1 },
-	{ "length": 11.00, "radius": 500.0, "slope": 2.0000, "turn": -1 },
+	{ "length": 7.00, "radius": 0.0, "slope": 2.0000, "turn": 1 },
+	{ "length": 10.50, "radius": 400.0, "slope": 2.0000, "turn": -1 },
+	{ "length": 6.50, "radius": 0.0, "slope": 2.0000, "turn": 1 },
+	{ "length": 11.00, "radius": 500.0, "slope": 2.0000, "turn": 1 },
 
-	{ "length": 1.50, "radius": 500.0, "slope": -8.0000, "turn": -1 },
-	{ "length": 5.00, "radius": 0.0, "slope": -8.0000, "turn": -1 },
-	{ "length": 23.50, "radius": 31.0, "slope": -8.0000, "turn": -1 },
+	{ "length": 1.50, "radius": 500.0, "slope": -8.0000, "turn": 1 },
+	{ "length": 5.00, "radius": 0.0, "slope": -8.0000, "turn": 1 },
+	{ "length": 23.50, "radius": 31.0, "slope": -8.0000, "turn": 1 },
 
-	{ "length": 45.00, "radius": 31.0, "slope": -17.0000, "turn": -1 },
+	{ "length": 45.00, "radius": 31.0, "slope": -17.0000, "turn": 1 },
 
-	{ "length": 44.00, "radius": 31.0, "slope": -4.0000, "turn": -1 },
-	{ "length": 21.00, "radius": 0.0, "slope": -4.0000, "turn": -1 },
-	{ "length": 20.00, "radius": 33.0, "slope": -4.0000, "turn": -1 },
+	{ "length": 44.00, "radius": 31.0, "slope": -4.0000, "turn": 1 },
+	{ "length": 21.00, "radius": 0.0, "slope": -4.0000, "turn": 1 },
+	{ "length": 20.00, "radius": 33.0, "slope": -4.0000, "turn": 1 },
 
-	{ "length": 60.00, "radius": 33.0, "slope": 2.5000, "turn": -1 },
+	{ "length": 60.00, "radius": 33.0, "slope": 2.5000, "turn": 1 },
 
-	{ "length": 42.00, "radius": 33.0, "slope": 10.0000, "turn": -1 },
-	{ "length": 14.50, "radius": 0.0, "slope": 10.0000, "turn": -1 },
-	{ "length": 13.50, "radius": 34.0, "slope": 10.0000, "turn": 1 },
+	{ "length": 42.00, "radius": 33.0, "slope": 10.0000, "turn": 1 },
+	{ "length": 14.50, "radius": 0.0, "slope": 10.0000, "turn": 1 },
+	{ "length": 13.50, "radius": 34.0, "slope": 10.0000, "turn": -1 },
 
-	{ "length": 38.50, "radius": 34.0, "slope": 16.0000, "turn": 1 },
-	{ "length": 26.50, "radius": 0.0, "slope": 16.0000, "turn": -1 }
+	{ "length": 38.50, "radius": 34.0, "slope": 16.0000, "turn": -1 },
+	{ "length": 26.50, "radius": 0.0, "slope": 16.0000, "turn": 1 }
 
   ]
 }
