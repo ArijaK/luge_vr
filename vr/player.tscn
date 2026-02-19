@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://w4mduqs027ip" path="res://player.gd" id="1_4flbx"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4flbx"]
-friction = 0.5
 
 [sub_resource type="SphereMesh" id="SphereMesh_sh265"]
 
@@ -13,7 +12,9 @@ albedo_color = Color(1, 0.007843138, 0.2627451, 1)
 [sub_resource type="SphereShape3D" id="SphereShape3D_4flbx"]
 
 [node name="Player" type="RigidBody3D"]
+mass = 90.0
 physics_material_override = SubResource("PhysicsMaterial_4flbx")
+linear_velocity = Vector3(0, 0, -55)
 script = ExtResource("1_4flbx")
 
 [node name="Node3D" type="Node3D" parent="."]

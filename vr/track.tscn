@@ -3,7 +3,8 @@
 [ext_resource type="Script" uid="uid://bw0p34kol6enc" path="res://track.gd" id="1_mll3j"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mll3j"]
-friction = 0.05
+friction = 0.01
+rough = true
 
 [node name="Track" type="StaticBody3D"]
 physics_material_override = SubResource("PhysicsMaterial_mll3j")
