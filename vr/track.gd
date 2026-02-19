@@ -1,5 +1,12 @@
 class_name TrackGenerator extends StaticBody3D
 
+# NOTE: Maybe some of these general functions must be put outside track.gd?
+func lerp_list(from: float, to: float, elements: int) -> PackedFloat32Array:
+	var result = PackedFloat32Array()
+	for i in range(elements):
+		result.push_back( lerp(from, to, (float(i)/elements)) )
+	return result
+
 
 func load_config(path: String) -> ConfigFile:
 	var cfg = ConfigFile.new()
