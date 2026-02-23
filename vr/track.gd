@@ -38,30 +38,43 @@ func parse_json(path: String):
 		return
 
 
-func create_centerline(start: Vector3, segments: Array) -> Curve3D:
+func get_radius(at: float):
+	pass
+
+func get_slope(at: float):
+	pass
+
+func create_centerline(start: Vector3, length: float, segments:) -> Curve3D:
 	var result = Curve3D.new()
 	var direction = Vector3.FORWARD
+	var slope = 0.0
+	var radius = 0.0
+	var turn = 0
 	
 	result.add_point(start)
 	
-	for s in segments:
-		if is_zero_approx(s.radius):
-			start += direction * s.length
-			start.y -= s.length * (s.slope / 100.0)
-			
-			result.add_point(start)
-		else:
-			# Angle of the curve
-			var angle_rad = s.length / s.radius
-			var slope_rad = atan(s.slope / 100.0)
-			var angle_step = result.bake_interval / s.radius
-			
-			for i in range(0, int(angle_rad/angle_step)):
-				direction = direction.rotated(Vector3.UP, angle_step * s.turn)
-				
-				start += direction * result.bake_interval
-				start.y -= tan(slope_rad) * result.bake_interval
-				result.add_point(start)
+	for i in range(0, length, result.bake_interval):
+		pass
+		#slope = get_slope()
+		#radius, turn = get_radius()
+		#
+		#if is_zero_approx(s.radius):
+			#start += direction * s.length
+			#start.y -= s.length * (s.slope / 100.0)
+			#
+			#result.add_point(start)
+		#else:
+			## Angle of the curve
+			#var angle_rad = s.length / s.radius
+			#var slope_rad = atan(s.slope / 100.0)
+			#var angle_step = result.bake_interval / s.radius
+			#
+			#for i in range(0, int(angle_rad/angle_step)):
+				#direction = direction.rotated(Vector3.UP, angle_step * s.turn)
+				#
+				#start += direction * result.bake_interval
+				#start.y -= tan(slope_rad) * result.bake_interval
+				#result.add_point(start)
 	
 	return result
 
@@ -148,18 +161,18 @@ func _ready() -> void:
 	var start_pos = cfg.get_value("track", "start_pos")
 	var track_shape = get_track_shape(data["track_shape"])
 	
-	trajectory.curve = create_centerline(
-		Vector3(start_pos[0], start_pos[1], start_pos[2]), 
-		data["segments"]
-	)
-	
-	if trajectory.curve.point_count > 0:
-		mesh_instance.mesh = create_mesh(trajectory.curve, track_shape)
-		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
-		
-		var material = StandardMaterial3D.new()
-		material.albedo_color = Color(0.589, 0.004, 0.92, 1.0)
-		material.roughness = 0.05
-		material.metallic = 0.0
-		
-		mesh_instance.set_surface_override_material(0, material)
+	#trajectory.curve = create_centerline(
+		#Vector3(start_pos[0], start_pos[1], start_pos[2]), 
+		#data["segments"]
+	#)
+	#
+	#if trajectory.curve.point_count > 0:
+		#mesh_instance.mesh = create_mesh(trajectory.curve, track_shape)
+		#collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
+		#
+		#var material = StandardMaterial3D.new()
+		#material.albedo_color = Color(0.815, 0.906, 0.973, 1.0)
+		#material.roughness = 0.05
+		#material.metallic = 0.0
+		#
+		#mesh_instance.set_surface_override_material(0, material)
