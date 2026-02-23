@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcvdjjjinyced"]
+
+[ext_resource type="Script" uid="uid://bw0p34kol6enc" path="res://scenes/track/track.gd" id="1_mll3j"]
+[ext_resource type="Script" uid="uid://b3dvn7lt048so" path="res://scenes/track/centerline.gd" id="2_kk5tn"]
+[ext_resource type="Script" uid="uid://bl38a1hpqrerh" path="res://scenes/track/mesh_instance_3d.gd" id="3_0mev1"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mll3j"]
+friction = 0.01
+rough = true
+
+[sub_resource type="Curve3D" id="Curve3D_0mev1"]
+
+[node name="Track" type="StaticBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_mll3j")
+script = ExtResource("1_mll3j")
+
+[node name="Centerline" type="Path3D" parent="."]
+curve = SubResource("Curve3D_0mev1")
+script = ExtResource("2_kk5tn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+script = ExtResource("3_0mev1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
