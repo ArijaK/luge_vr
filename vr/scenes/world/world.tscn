@@ -28,7 +28,7 @@ shadow_enabled = true
 [node name="Track" parent="." instance=ExtResource("2_v5dby")]
 
 [node name="Player" parent="." instance=ExtResource("3_t5ptc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4.2891326)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2.289)
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("follow_target")]
 transform = Transform3D(1, 0, 0, 0, 0.9952631, 0.09721814, 0, -0.09721814, 0.9952631, 0, 0, 0)
