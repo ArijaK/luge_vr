@@ -6,23 +6,24 @@ func create_centerline(track: TrackData):
 	# Because Z is forward
 	var point = Vector3(0.0, 0.0, track.start_at)
 	var slope = track.get_slope(-point.z)
-	var radius = track.get_radius(-point.z)
+	var curvature = track.get_curvature(-point.z)
 	
 	curve.add_point(point)
 	
 	for i in range(floori(track.length/curve.bake_interval)):
 		var Sx = i * curve.bake_interval
 		slope = track.get_slope(Sx)
-		radius = track.get_radius(Sx)
+		curvature = track.get_curvature(Sx)
 		
-		if is_zero_approx(radius[0]):
+		if is_zero_approx(curvature[0]):
 			point += direction * curve.bake_interval
 			point.y -= (slope / 100.0) * curve.bake_interval
 		else:
 			var slope_rad = atan(slope / 100.0)
-			var angle_step = radius[0] * curve.bake_interval
-			direction = direction.rotated(Vector3.UP, angle_step * radius[1])
+			var angle_step = curvature[0] * curve.bake_interval
+			direction = direction.rotated(Vector3.UP, angle_step * curvature[1])
 			
 			point += direction * curve.bake_interval
 			point.y -= tan(slope_rad) * curve.bake_interval
+		
 		curve.add_point(point)
