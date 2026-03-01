@@ -1,17 +1,5 @@
 extends StaticBody3D
 
-func lerp_list(from: float, to: float, elements: int) -> PackedFloat32Array:
-	var result = PackedFloat32Array()
-	for i in range(elements):
-		result.push_back( lerp(from, to, (float(i)/elements)) )
-	return result
-
-func get_radius(at: float):
-	pass
-
-func get_slope(at: float):
-	pass
-
 func get_track_shape(points: Array) -> PackedVector3Array:
 	var result = PackedVector3Array()
 	for p in points:
@@ -24,19 +12,20 @@ func get_track_shape(points: Array) -> PackedVector3Array:
 
 func _ready() -> void:
 	var cfg = FileUtils.load_config("res://config.cfg")
+	# NOTE: Currently expects already sorted data
 	var data = FileUtils.parse_json(cfg.get_value("track", "segments_path"))
 	
+	var track_data = TrackData.new()
+	track_data.length = data["length"]
+	track_data.start_at = -min(data["segments"]["slopes"][0].Sx_entrance, data["segments"]["curves"][0].Sx_entrance)
+	track_data.track_shape = get_track_shape(data["track_shape"])
+	track_data.slope_segments = data["segments"]["slopes"]
+	track_data.curve_segments = data["segments"]["curves"]
 	
-	var start_pos = cfg.get_value("track", "start_pos")
-	var track_shape = get_track_shape(data["track_shape"])
+	centerline.create_centerline(track_data)
 	
-	centerline.create_centerline(
-		Vector3(start_pos[0], start_pos[1], start_pos[2]), 
-		data["length"]
-	)
-
 	if centerline.curve.point_count > 0:
-		mesh_instance.create_mesh(centerline.curve, track_shape)
+		mesh_instance.create_mesh(centerline.curve, track_data.track_shape)
 		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
 		
 		var material = StandardMaterial3D.new()
