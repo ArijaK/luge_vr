@@ -39,7 +39,6 @@
 			{ "Sx_entrance": 1390.00, "length": 65.0, "slope": -16.0000 }
 		],
 		"curves": [
-			{ "Sx_entrance": -22.00, "length": 102.50, "radius": 0.0, "turn": 0 },
 			{ "Sx_entrance": 80.50, "length": 32.00, "radius": 17.0, "turn": 1 },
 			{ "Sx_entrance": 121.00, "length": 40.50, "radius": 15.0, "turn": -1 },
 			{ "Sx_entrance": 181.50, "length": 80.50, "radius": 21.4, "turn": 1 },
