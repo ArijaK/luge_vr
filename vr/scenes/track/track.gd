@@ -1,11 +1,5 @@
 extends StaticBody3D
 
-func get_track_shape(points: Array) -> PackedVector3Array:
-	var result = PackedVector3Array()
-	for p in points:
-		result.append(Vector3(p[0], p[1], p[2]))	
-	return result
-
 @onready var centerline = $Centerline
 @onready var mesh_instance = $MeshInstance3D
 @onready var collision_shape = $CollisionShape3D
@@ -16,11 +10,7 @@ func _ready() -> void:
 	var data = FileUtils.parse_json(cfg.get_value("track", "segments_path"))
 	
 	var track_data = TrackData.new()
-	track_data.length = data["length"]
-	track_data.start_at = -min(data["segments"]["slopes"][0].Sx_entrance, data["segments"]["curves"][0].Sx_entrance)
-	track_data.track_shape = get_track_shape(data["track_shape"])
-	track_data.slope_segments = data["segments"]["slopes"]
-	track_data.curve_segments = data["segments"]["curves"]
+	track_data.fill(data)
 	
 	centerline.create_centerline(track_data)
 	

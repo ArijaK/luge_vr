@@ -15,13 +15,13 @@ func create_centerline(track: TrackData):
 		slope = track.get_slope(Sx)
 		curvature = track.get_curvature(Sx)
 		
-		if is_zero_approx(curvature[0]):
+		if is_zero_approx(curvature):
 			point += direction * curve.bake_interval
 			point.y -= (slope / 100.0) * curve.bake_interval
 		else:
 			var slope_rad = atan(slope / 100.0)
-			var angle_step = curvature[0] * curve.bake_interval
-			direction = direction.rotated(Vector3.UP, angle_step * curvature[1])
+			var angle_step = curvature * curve.bake_interval
+			direction = direction.rotated(Vector3.UP, angle_step)
 			
 			point += direction * curve.bake_interval
 			point.y -= tan(slope_rad) * curve.bake_interval
