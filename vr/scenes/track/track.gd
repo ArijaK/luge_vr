@@ -15,7 +15,7 @@ func _ready() -> void:
 	centerline.create_centerline(track_data)
 	
 	if centerline.curve.point_count > 0:
-		mesh_instance.create_mesh(centerline.curve, track_data.track_shape)
+		mesh_instance.create_mesh(centerline.curve, track_data)
 		collision_shape.shape = mesh_instance.mesh.create_trimesh_shape()
 		
 		var material = StandardMaterial3D.new()

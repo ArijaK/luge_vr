@@ -1,11 +1,15 @@
 # TODO: Check, if there is any way how to make something private
 class_name TrackData extends Node
 
+@export var cross_section_points = 33
+
 var length = 0.0
+var width = 0.0
+var default_height = 0.0
 var start_at = 0.0
+
 var slope_segments = Array()
 var curve_segments = Array()
-var track_shape = PackedVector3Array()
 
 var current_slope_idx = 0
 
@@ -17,6 +21,7 @@ func create_height(heights: Array):
 	height.min_domain = start_at 
 	height.max_domain = start_at + length
 	height.max_value = 5.0
+	height.min_value = default_height
 	
 	height.add_point(Vector2(start_at, 0.0))
 	
@@ -54,25 +59,24 @@ func create_curvature():
 	curvature.add_point(Vector2(start_at + length, 0.0))
 	curvature.bake()
 
-func get_track_shape(points: Array) -> PackedVector3Array:
-	var result = PackedVector3Array()
-	for p in points:
-		result.append(Vector3(p[0], p[1], p[2]))	
-	return result
-
 func fill(data: Dictionary):
 	length = data["length"]
+	width = data["width"]
+	default_height = data["default_height"]
 	start_at = -min(data["segments"]["slopes"][0].Sx_entrance, data["segments"]["curves"][0].Sx_entrance)
-	track_shape = get_track_shape(data["track_shape"])
+	
 	slope_segments = data["segments"]["slopes"]
 	curve_segments = data["segments"]["curves"]
 	
 	create_curvature()
 	create_height(data["segments"]["heights"])
 
+func get_height(at: float) -> float:
+	return height.sample(at)
+	
 func get_curvature(at: float) -> float:
 	return curvature.sample(at)
-	
+
 func get_slope(at: float) -> float:
 	while current_slope_idx < slope_segments.size():
 		var segment = slope_segments[current_slope_idx]
@@ -85,3 +89,43 @@ func get_slope(at: float) -> float:
 		else:
 			return 0.0
 	return 0.0
+
+func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
+	var points = PackedVector3Array()
+	points.resize(cross_section_points)
+	
+	var half_width = width * 0.5
+	# Middle of the shape - centerline point
+	var middlepoint = floori(cross_section_points * 0.5)
+	points[middlepoint] = Vector3.ZERO
+	
+	var h = height.sample(at)
+	var c = curvature.sample(at)
+	
+	var heights = MathUtils.lerp_list(h, 0.0, middlepoint)
+	var default_heights = MathUtils.lerp_list(default_height, 0.0, middlepoint)
+	
+	# If it is a straight trajectory
+	if is_equal_approx(h, default_height):
+		for i in range(middlepoint):
+			points[i] = Vector3(-half_width, default_heights[i], 0.0)
+			points[cross_section_points-1-i] = Vector3(half_width, default_heights[i], 0.0)
+	else:
+		var curve_side = sign(c)
+		# How curvy the wall should be
+		var max_x = width + 0.5 * h + 0.1 * abs(c)
+		var widths = MathUtils.lerp_list(max_x, half_width, middlepoint)
+		
+		if curve_side < 0:
+			for i in range(middlepoint):
+				points[i] = Vector3(-widths[i], heights[i], 0.0)
+				points[cross_section_points-1-i] = Vector3(half_width, default_heights[i], 0.0)
+		else:
+			for i in range(middlepoint):
+				points[i] = Vector3(-half_width, default_heights[i], 0.0)
+				points[cross_section_points-1-i] = Vector3(widths[i], heights[i], 0.0)
+	
+	for i in range(cross_section_points):
+		points[i] = T * points[i]
+	
+	return points

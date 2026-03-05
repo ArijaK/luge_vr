@@ -6,13 +6,7 @@ func get_T(p1: Vector3, p2: Vector3, current_up: Vector3) -> Transform3D:
 	var right = forward.cross(Vector3.UP).normalized()
 	return Transform3D( Basis(right, up, forward), p1)
 
-func get_shape_points(shape: PackedVector3Array, T: Transform3D) -> PackedVector3Array:
-	var result = PackedVector3Array()
-	for p in shape:
-		result.append(T * p)
-	return result
-
-func create_mesh(curve: Curve3D, shape: Array):
+func create_mesh(curve: Curve3D, track_data: TrackData):
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		
@@ -25,7 +19,7 @@ func create_mesh(curve: Curve3D, shape: Array):
 		var p_next = line_points[i + 1]
 		var T = get_T(p, p_next, up)
 		
-		sections.append(get_shape_points(shape, T))
+		sections.append(track_data.get_shape_points(i*curve.bake_interval, T))
 		up = T.basis.y
 
 	for i in range(sections.size() - 1):
