@@ -2,6 +2,7 @@
 class_name TrackData extends Node
 
 @export var cross_section_points = 33
+@export var k_curvature = 1.5
 
 var length = 0.0
 var width = 0.0
@@ -34,7 +35,7 @@ func create_height(heights: Array):
 func create_curvature():
 	curvature.bake_resolution = 1000
 	curvature.min_domain = start_at 
-	curvature.max_domain = start_at + length
+	curvature.max_domain = length - start_at
 	curvature.min_value = -10.0
 	curvature.max_value = 10.0
 	
@@ -63,7 +64,7 @@ func fill(data: Dictionary):
 	length = data["length"]
 	width = data["width"]
 	default_height = data["default_height"]
-	start_at = -min(data["segments"]["slopes"][0].Sx_entrance, data["segments"]["curves"][0].Sx_entrance)
+	start_at = min(data["segments"]["slopes"][0].Sx_entrance, data["segments"]["curves"][0].Sx_entrance)
 	
 	slope_segments = data["segments"]["slopes"]
 	curve_segments = data["segments"]["curves"]
@@ -90,6 +91,9 @@ func get_slope(at: float) -> float:
 			return 0.0
 	return 0.0
 
+func bezier(p0, p1, p2, t):
+	return (1-t)*(1-t)*p0 + 2*(1-t)*t*p1 + t*t*p2
+
 func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 	var points = PackedVector3Array()
 	points.resize(cross_section_points)
@@ -113,8 +117,13 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 	else:
 		var curve_side = sign(c)
 		# How curvy the wall should be
-		var max_x = width + 0.5 * h + 0.1 * abs(c)
-		var widths = MathUtils.lerp_list(max_x, half_width, middlepoint)
+		var max_width = width + k_curvature * abs(c)
+		
+		var widths = []
+		for i in range(middlepoint):
+			var t = i / float(middlepoint - 1)
+			var x = bezier(max_width, max_width * 0.5, half_width, t)
+			widths.append(x)
 		
 		if curve_side < 0:
 			for i in range(middlepoint):
