@@ -20,8 +20,8 @@ var height = Curve.new()
 func create_height(heights: Array):
 	height.bake_resolution = 1000
 	height.min_domain = start_at 
-	height.max_domain = start_at + length
-	height.max_value = 5.0
+	height.max_domain = length
+	height.max_value = 3.0
 	height.min_value = default_height
 	
 	height.add_point(Vector2(start_at, 0.0))
@@ -29,13 +29,13 @@ func create_height(heights: Array):
 	for h in heights:
 		height.add_point(Vector2(h.Sx_entrance, h.height))
 	
-	height.add_point(Vector2(start_at + length, 0.0))
+	height.add_point(Vector2(length, 0.0))
 	height.bake()
 
 func create_curvature():
 	curvature.bake_resolution = 1000
 	curvature.min_domain = start_at 
-	curvature.max_domain = length - start_at
+	curvature.max_domain = length
 	curvature.min_value = -10.0
 	curvature.max_value = 10.0
 	
@@ -57,14 +57,19 @@ func create_curvature():
 		))
 		curvature.add_point(Vector2(c.Sx_entrance + c.length, 0.0))
 	
-	curvature.add_point(Vector2(start_at + length, 0.0))
+	curvature.add_point(Vector2(length, 0.0))
 	curvature.bake()
 
 func fill(data: Dictionary):
+	start_at = min(
+		data["segments"]["slopes"][0].
+		Sx_entrance, data["segments"]["curves"][0].Sx_entrance,
+		0
+	)
+	# NOTE: Length starts at Sx_entrance == 0
 	length = data["length"]
 	width = data["width"]
 	default_height = data["default_height"]
-	start_at = min(data["segments"]["slopes"][0].Sx_entrance, data["segments"]["curves"][0].Sx_entrance)
 	
 	slope_segments = data["segments"]["slopes"]
 	curve_segments = data["segments"]["curves"]

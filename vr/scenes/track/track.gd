@@ -3,6 +3,7 @@ extends StaticBody3D
 @onready var centerline = $Centerline
 @onready var mesh_instance = $MeshInstance3D
 @onready var collision_shape = $CollisionShape3D
+#@onready var track_data = $TrackData
 
 func _ready() -> void:
 	var cfg = FileUtils.load_config("res://config.cfg")
@@ -12,7 +13,8 @@ func _ready() -> void:
 	var track_data = TrackData.new()
 	track_data.fill(data)
 	
-	centerline.create_centerline(track_data)
+	#centerline.create_centerline(track_data)
+	centerline.build_curve_with_exact_length(track_data)
 	
 	if centerline.curve.point_count > 0:
 		mesh_instance.create_mesh(centerline.curve, track_data)
