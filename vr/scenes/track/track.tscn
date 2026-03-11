@@ -9,23 +9,27 @@
 friction = 0.01
 rough = true
 
-[sub_resource type="Curve3D" id="Curve3D_236c3"]
-
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_0mev1"]
 
-[node name="Track" type="StaticBody3D"]
-physics_material_override = SubResource("PhysicsMaterial_mll3j")
+[sub_resource type="Curve3D" id="Curve3D_236c3"]
+
+[node name="Track" type="Node3D"]
 script = ExtResource("1_mll3j")
 
-[node name="Centerline" type="Path3D" parent="."]
-curve = SubResource("Curve3D_236c3")
-script = ExtResource("2_kk5tn")
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_mll3j")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0mev1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+visible = false
 script = ExtResource("3_0mev1")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("ConcavePolygonShape3D_0mev1")
+[node name="Centerline" type="Path3D" parent="."]
+visible = false
+curve = SubResource("Curve3D_236c3")
+script = ExtResource("2_kk5tn")
 
 [node name="TrackData" type="Node" parent="."]
 script = ExtResource("4_236c3")

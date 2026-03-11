@@ -1,20 +1,19 @@
-extends StaticBody3D
+extends Node3D
 
 @onready var centerline = $Centerline
-@onready var mesh_instance = $MeshInstance3D
-@onready var collision_shape = $CollisionShape3D
-#@onready var track_data = $TrackData
+@onready var mesh_instance = $StaticBody3D/MeshInstance3D
+@onready var collision_shape = $StaticBody3D/CollisionShape3D
+@onready var track_data = $TrackData
 
 func _ready() -> void:
 	var cfg = FileUtils.load_config("res://config.cfg")
 	# NOTE: Currently expects already sorted data
 	var data = FileUtils.parse_json(cfg.get_value("track", "segments_path"))
 	
-	var track_data = TrackData.new()
 	track_data.fill(data)
 	
-	#centerline.create_centerline(track_data)
-	centerline.build_curve_with_exact_length(track_data)
+	centerline.create_centerline(track_data)
+	DebugUtils.draw_curve(track_data.height.get_, self)
 	
 	if centerline.curve.point_count > 0:
 		mesh_instance.create_mesh(centerline.curve, track_data)
