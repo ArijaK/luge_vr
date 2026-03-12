@@ -101,9 +101,6 @@ func get_slope(at: float) -> float:
 			return 0.0
 	return 0.0
 
-func bezier(p0, p1, p2, t):
-	return (1-t)*(1-t)*p0 + 2*(1-t)*t*p1 + t*t*p2
-
 func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 	var points = PackedVector3Array()
 	points.resize(cross_section_points)
@@ -116,7 +113,6 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 	var h = height.sample(at)
 	var c = curvature.sample(at)
 	
-	var heights = MathUtils.lerp_list(h, 0.0, middlepoint)
 	var default_heights = MathUtils.lerp_list(default_height, 0.0, middlepoint)
 	
 	# If it is a straight trajectory
@@ -129,20 +125,24 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 		# How curvy the wall should be
 		var max_width = width + k_curvature * abs(c)
 		
-		var widths = []
+		var p0 = Vector2(half_width, 0.0)
+		var p1 = Vector2(max_width, default_height)
+		var p2 = Vector2(half_width, h)
+
+		var curve_side_points = []
+
 		for i in range(middlepoint):
 			var t = i / float(middlepoint - 1)
-			var x = bezier(max_width, max_width * 0.5, half_width, t)
-			widths.append(x)
-		
+			curve_side_points.append(MathUtils.quadratic_bezier(p0, p1, p2, t, curve_side))
+
 		if curve_side < 0:
 			for i in range(middlepoint):
-				points[i] = Vector3(-widths[i], heights[i], 0.0)
+				points[i] = curve_side_points[i]
 				points[cross_section_points-1-i] = Vector3(half_width, default_heights[i], 0.0)
 		else:
 			for i in range(middlepoint):
 				points[i] = Vector3(-half_width, default_heights[i], 0.0)
-				points[cross_section_points-1-i] = Vector3(widths[i], heights[i], 0.0)
+				points[cross_section_points-1-i] = curve_side_points[i]
 	
 	for i in range(cross_section_points):
 		points[i] = T * points[i]
