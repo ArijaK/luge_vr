@@ -17,47 +17,53 @@ var current_slope_idx = 0
 var curvature = Curve.new()
 var height = Curve.new()
 
+func normalize(at: float) -> float:
+	return (at - start_at) / length
+
 func create_height(heights: Array):
+	var h_values = heights.map(func(x): return x["height"])
+	
 	height.bake_resolution = 1000
-	height.min_domain = start_at 
-	height.max_domain = length
-	height.max_value = 3.0
-	height.min_value = default_height
+	height.max_value = h_values.max()
+	height.min_value = h_values.min()
 	
-	height.add_point(Vector2(start_at, 0.0))
-	
+	height.add_point(Vector2(0.0, 0.0))
 	for h in heights:
-		height.add_point(Vector2(h.Sx_entrance, h.height))
+		height.add_point(Vector2(
+			normalize(h.Sx_entrance), h.height
+		))
+	height.add_point(Vector2(1.0, 0.0))
 	
-	height.add_point(Vector2(length, 0.0))
 	height.bake()
 
 func create_curvature():
 	curvature.bake_resolution = 1000
-	curvature.min_domain = start_at 
-	curvature.max_domain = length
-	curvature.min_value = -10.0
-	curvature.max_value = 10.0
+	curvature.min_value = -1.0
+	curvature.max_value = 1.0
 	
-	curvature.add_point(Vector2(start_at, 0.0))
+	curvature.add_point(Vector2(0.0, 0.0))
 	
 	for c in curve_segments:
-		curvature.add_point(Vector2(c.Sx_entrance, 0.0))
 		curvature.add_point(Vector2(
-			c.Sx_entrance + c.length * 0.23, 
+			normalize(c.Sx_entrance), 0.0
+		))
+		curvature.add_point(Vector2(
+			normalize(c.Sx_entrance + c.length * 0.23), 
 			(1/c.radius) * c.turn
 		))
 		curvature.add_point(Vector2(
-			c.Sx_entrance + c.length * 0.5, 
+			normalize(c.Sx_entrance + c.length * 0.5), 
 			(1/c.radius) * c.turn
 		))
 		curvature.add_point(Vector2(
-			c.Sx_entrance + c.length * 0.80, 
+			normalize(c.Sx_entrance + c.length * 0.80), 
 			(1/c.radius) * c.turn
 		))
-		curvature.add_point(Vector2(c.Sx_entrance + c.length, 0.0))
+		curvature.add_point(Vector2(
+			normalize(c.Sx_entrance + c.length), 0.0
+		))
 	
-	curvature.add_point(Vector2(length, 0.0))
+	curvature.add_point(Vector2(1.0, 0.0))
 	curvature.bake()
 
 func fill(data: Dictionary):
@@ -66,8 +72,7 @@ func fill(data: Dictionary):
 		Sx_entrance, data["segments"]["curves"][0].Sx_entrance,
 		0
 	)
-	# NOTE: Length starts at Sx_entrance == 0
-	length = data["length"]
+	length = data["length"] - start_at
 	width = data["width"]
 	default_height = data["default_height"]
 	

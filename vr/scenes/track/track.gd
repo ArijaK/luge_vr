@@ -13,7 +13,6 @@ func _ready() -> void:
 	track_data.fill(data)
 	
 	centerline.create_centerline(track_data)
-	DebugUtils.draw_curve(track_data.height.get_, self)
 	
 	if centerline.curve.point_count > 0:
 		mesh_instance.create_mesh(centerline.curve, track_data)

@@ -14,13 +14,18 @@ func create_mesh(curve: Curve3D, track_data: TrackData):
 	var sections = []
 	
 	var up = Vector3.UP
-	for i in range(line_points.size() - 1):
+	var Sx = 0.0
+	for i in range(1, line_points.size()):		
 		var p = line_points[i]
-		var p_next = line_points[i + 1]
-		var T = get_T(p, p_next, up)
+		var p_prev = line_points[i - 1]
+		var T = get_T(p_prev, p, up)
 		
-		sections.append(track_data.get_shape_points(i*curve.bake_interval, T))
+		sections.append(
+			track_data.get_shape_points(Sx / curve.get_baked_length(), T)
+		)
+		
 		up = T.basis.y
+		Sx += p.distance_to(p_prev)
 
 	for i in range(sections.size() - 1):
 		var s = sections[i]

@@ -23,11 +23,9 @@ physics_material_override = SubResource("PhysicsMaterial_mll3j")
 shape = SubResource("ConcavePolygonShape3D_0mev1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-visible = false
 script = ExtResource("3_0mev1")
 
 [node name="Centerline" type="Path3D" parent="."]
-visible = false
 curve = SubResource("Curve3D_236c3")
 script = ExtResource("2_kk5tn")
 

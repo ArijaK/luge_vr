@@ -2,7 +2,7 @@ class_name DebugUtils extends Node
 
 static var enabled = true
 
-static func draw_curve(curve: Curve3D, parent: Node3D):
+static func draw_curve3d(curve: Curve3D, parent: Node3D):
 	var immesh = ImmediateMesh.new()
 
 	var material = StandardMaterial3D.new()
