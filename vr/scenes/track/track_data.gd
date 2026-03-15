@@ -2,7 +2,7 @@
 class_name TrackData extends Node
 
 @export var cross_section_points = 33
-@export var k_curvature = 1.5
+@export var k_curvature = 1.2
 
 var length = 0.0
 var width = 0.0
@@ -122,27 +122,26 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 			points[cross_section_points-1-i] = Vector3(half_width, default_heights[i], 0.0)
 	else:
 		var curve_side = sign(c)
-		# How curvy the wall should be
+		# How curvy the wall should be NOTE: Maybe update later
 		var max_width = width + k_curvature * abs(c)
 		
-		var p0 = Vector2(half_width, 0.0)
-		var p1 = Vector2(max_width, default_height)
-		var p2 = Vector2(half_width, h)
+		var p0 = Vector2(half_width * curve_side, 0.0)
+		var p1 = Vector2(max_width * curve_side, default_height)
+		var p2 = Vector2(half_width * curve_side, h)
 
-		var curve_side_points = []
-
+		var curve_points = []
 		for i in range(middlepoint):
 			var t = i / float(middlepoint - 1)
-			curve_side_points.append(MathUtils.quadratic_bezier(p0, p1, p2, t, curve_side))
+			curve_points.append(MathUtils.quadratic_bezier(p0, p1, p2, t))
 
 		if curve_side < 0:
 			for i in range(middlepoint):
-				points[i] = curve_side_points[i]
+				points[i] = curve_points[i]
 				points[cross_section_points-1-i] = Vector3(half_width, default_heights[i], 0.0)
 		else:
 			for i in range(middlepoint):
 				points[i] = Vector3(-half_width, default_heights[i], 0.0)
-				points[cross_section_points-1-i] = curve_side_points[i]
+				points[cross_section_points-1-i] = curve_points[i]
 	
 	for i in range(cross_section_points):
 		points[i] = T * points[i]
