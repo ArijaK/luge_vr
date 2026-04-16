@@ -14,3 +14,7 @@ config/name="LugeVR"
 run/main_scene="uid://cn4jxm3ph1wkx"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"

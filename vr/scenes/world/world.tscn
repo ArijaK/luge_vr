@@ -1,16 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://dckstqrm1gltx"]
+[gd_scene load_steps=7 format=3 uid="uid://dckstqrm1gltx"]
 
-[ext_resource type="Texture2D" uid="uid://bf0tsgtl1dp6r" path="res://images/pexels-marcelo-mora-203572590-31716807.jpg" id="1_6m72w"]
 [ext_resource type="PackedScene" uid="uid://dcvdjjjinyced" path="res://scenes/track/track.tscn" id="2_v5dby"]
 [ext_resource type="PackedScene" uid="uid://dlurk0ajee0mn" path="res://scenes/player/player.tscn" id="3_t5ptc"]
 [ext_resource type="Script" uid="uid://cq01ccy5h6682" path="res://scenes/world/camera_3d.gd" id="4_bq33v"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_tlwt5"]
-panorama = ExtResource("1_6m72w")
-energy_multiplier = 0.7
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1fp7r"]
+ground_bottom_color = Color(0.31382, 0.31239477, 0.28846735, 1)
 
 [sub_resource type="Sky" id="Sky_gv5m4"]
-sky_material = SubResource("PanoramaSkyMaterial_tlwt5")
+sky_material = SubResource("ProceduralSkyMaterial_1fp7r")
 
 [sub_resource type="Environment" id="Environment_f3sb7"]
 background_mode = 2
@@ -28,9 +26,10 @@ shadow_enabled = true
 [node name="Track" parent="." instance=ExtResource("2_v5dby")]
 
 [node name="Player" parent="." instance=ExtResource("3_t5ptc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2.289)
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 0, 0.22153711, 18)
+linear_damp = 0.1
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.9952631, 0.09721814, 0, -0.09721814, 0.9952631, 0, 0, 0)
+[node name="Camera3D" type="Camera3D" parent="Player" node_paths=PackedStringArray("follow_target")]
+transform = Transform3D(-0.034114555, 0, 0.9994181, 0, 1, 0, -0.99941814, 0, -0.03411454, -0.1602726, 0.22158617, 0.005980015)
 script = ExtResource("4_bq33v")
-follow_target = NodePath("../Player")
+follow_target = NodePath("..")
