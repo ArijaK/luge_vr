@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dckstqrm1gltx"]
+[gd_scene load_steps=6 format=3 uid="uid://dckstqrm1gltx"]
 
 [ext_resource type="PackedScene" uid="uid://dcvdjjjinyced" path="res://scenes/track/track.tscn" id="2_v5dby"]
 [ext_resource type="PackedScene" uid="uid://dlurk0ajee0mn" path="res://scenes/player/player.tscn" id="3_t5ptc"]
-[ext_resource type="Script" uid="uid://cq01ccy5h6682" path="res://scenes/world/camera_3d.gd" id="4_bq33v"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1fp7r"]
 ground_bottom_color = Color(0.31382, 0.31239477, 0.28846735, 1)
@@ -29,7 +28,5 @@ shadow_enabled = true
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 0, 0.22153711, 18)
 linear_damp = 0.1
 
-[node name="Camera3D" type="Camera3D" parent="Player" node_paths=PackedStringArray("follow_target")]
+[node name="Camera3D" type="Camera3D" parent="Player"]
 transform = Transform3D(-0.034114555, 0, 0.9994181, 0, 1, 0, -0.99941814, 0, -0.03411454, -0.1602726, 0.22158617, 0.005980015)
-script = ExtResource("4_bq33v")
-follow_target = NodePath("..")
