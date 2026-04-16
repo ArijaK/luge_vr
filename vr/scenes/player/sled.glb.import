@@ -1,0 +1,131 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://c6yikdrn4xhya"
+path="res://.godot/imported/sled.glb-5e9f552dfdaab0094640de659f376ea7.scn"
+
+[deps]
+
+source_file="res://scenes/player/sled.glb"
+dest_files=["res://.godot/imported/sled.glb-5e9f552dfdaab0094640de659f376ea7.scn"]
+
+[params]
+
+nodes/root_type="RigidBody3D"
+nodes/root_name="Player"
+nodes/root_script=Resource("uid://w4mduqs027ip", "res://scenes/player/player.gd")
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=false
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=false
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"meshes": {
+"sled_real_Cube_011": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/fallback_path": "res://meshes/human.res",
+"save_to_file/path": "uid://dh8mfbodog3pu"
+},
+"sled_real_Cylinder_013": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/fallback_path": "res://meshes/sled_pod.res",
+"save_to_file/path": "uid://bgkq743gx83xf"
+},
+"sled_real_Runner_004": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/fallback_path": "res://meshes/sled_runner2.res",
+"save_to_file/path": "uid://cjj54cwd2rled"
+},
+"sled_real_Runner_007": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/fallback_path": "res://meshes/sled_runner1.res",
+"save_to_file/path": "uid://bqxiox8u727j7"
+}
+},
+"nodes": {
+"PATH:SledRoot/PhysicsRoot": {
+"import/skip_import": true
+},
+"PATH:SledRoot/PhysicsRoot/HumanPhysics-convcol": {
+"import/skip_import": true
+},
+"PATH:SledRoot/PhysicsRoot/PodPhysics-convcol": {
+"import/skip_import": true
+},
+"PATH:SledRoot/PhysicsRoot/RunnerLPhysics-convcol": {
+"import/skip_import": true
+},
+"PATH:SledRoot/PhysicsRoot/RunnerRPhysics-convcol": {
+"import/skip_import": true
+},
+"PATH:SledRoot/VisualsRoot/RunnerL/BridgeLF": {
+"physics/body_type": 1,
+"physics/layer": 2,
+"physics/physics_material_override": null,
+"physics/shape_type": 1
+},
+"PATH:SledRoot/VisualsRoot/RunnerL/BridgeLR": {
+"physics/body_type": 1,
+"physics/layer": 2,
+"physics/shape_type": 1
+},
+"PATH:SledRoot/VisualsRoot/RunnerL/SteelL": {
+"generate/physics": true,
+"physics/body_type": 1,
+"physics/layer": 2,
+"physics/physics_material_override": Object(PhysicsMaterial,"resource_local_to_scene":false,"resource_name":"","friction":0.1,"rough":true,"bounce":0.0,"absorbent":true,"script":null)
+,
+"physics/shape_type": 1
+},
+"PATH:SledRoot/VisualsRoot/RunnerR/BridgeRF": {
+"physics/body_type": 1,
+"physics/layer": 2,
+"physics/shape_type": 1
+},
+"PATH:SledRoot/VisualsRoot/RunnerR/BridgeRR": {
+"physics/body_type": 1,
+"physics/layer": 2,
+"physics/shape_type": 1
+},
+"PATH:SledRoot/VisualsRoot/RunnerR/SteelR": {
+"generate/physics": true,
+"physics/body_type": 1,
+"physics/layer": 2,
+"physics/physics_material_override": Object(PhysicsMaterial,"resource_local_to_scene":false,"resource_name":"","friction":0.1,"rough":true,"bounce":0.0,"absorbent":true,"script":null)
+,
+"physics/shape_type": 1
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1
