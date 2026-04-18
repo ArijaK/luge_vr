@@ -2,7 +2,7 @@ extends Path3D
 
 func create_centerline(track: TrackData):
 	var direction = Vector3.FORWARD
-	# Because Z is forward
+	# Because -Z is forward
 	var point = Vector3(0.0, 0.0, -track.start_at)
 	var slope = track.get_slope(track.start_at)
 	var curvature = track.get_curvature(0.0)

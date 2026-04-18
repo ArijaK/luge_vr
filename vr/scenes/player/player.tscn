@@ -463,8 +463,9 @@ points = PackedVector3Array(-0.049244434, -0.093778566, -0.010297506, 0.7079918,
 [node name="Player" type="RigidBody3D"]
 collision_layer = 2
 input_ray_pickable = false
-mass = 90.0
+mass = 98.5
 physics_material_override = SubResource("PhysicsMaterial_8afob")
+center_of_mass_mode = 1
 continuous_cd = true
 script = ExtResource("1_4flbx")
 
