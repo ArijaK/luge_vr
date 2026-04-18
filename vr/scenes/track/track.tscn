@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dcvdjjjinyced"]
+[gd_scene load_steps=7 format=3 uid="uid://dcvdjjjinyced"]
 
 [ext_resource type="Script" uid="uid://bw0p34kol6enc" path="res://scenes/track/track.gd" id="1_mll3j"]
 [ext_resource type="Script" uid="uid://b3dvn7lt048so" path="res://scenes/track/centerline.gd" id="2_kk5tn"]
@@ -8,8 +8,6 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mll3j"]
 friction = 0.05
 rough = true
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_0mev1"]
 
 [sub_resource type="Curve3D" id="Curve3D_236c3"]
 
@@ -22,7 +20,6 @@ input_ray_pickable = false
 physics_material_override = SubResource("PhysicsMaterial_mll3j")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_0mev1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 script = ExtResource("3_0mev1")
