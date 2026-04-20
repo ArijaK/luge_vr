@@ -1,7 +1,7 @@
 # TODO: Check, if there is any way how to make something private
 class_name TrackData extends Node
 
-@export var cross_section_points = 33
+@export var cross_section_points = 13
 @export var k_curvature = 60
 
 var length = 0.0
@@ -127,7 +127,7 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 		
 		var p0 = Vector2(half_width * curve_side, 0.0)
 		var p1 = Vector2(max_width * curve_side, default_height)
-		var p2 = Vector2(max_width * 0.8 * curve_side, h)
+		var p2 = Vector2(max_width * curve_side, h)
 
 		var curve_points = []
 		for i in range(middlepoint):

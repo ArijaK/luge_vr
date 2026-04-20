@@ -10,6 +10,7 @@ friction = 0.05
 rough = true
 
 [sub_resource type="Curve3D" id="Curve3D_236c3"]
+bake_interval = 0.75
 
 [node name="Track" type="Node3D"]
 script = ExtResource("1_mll3j")
