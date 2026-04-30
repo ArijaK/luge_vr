@@ -4,6 +4,8 @@ extends Node3D
 @onready var mesh_instance = $StaticBody3D/MeshInstance3D
 @onready var collision_shape = $StaticBody3D/CollisionShape3D
 @onready var track_data = $TrackData
+@onready var surroundings = $Surroundings
+@onready var path = $Centerline/PathFollow3D
 
 func _ready() -> void:
 	var cfg = FileUtils.load_config("res://config.cfg")
@@ -20,7 +22,12 @@ func _ready() -> void:
 		
 		var material = StandardMaterial3D.new()
 		material.albedo_color = Color(0.815, 0.906, 0.973, 1.0)
-		material.roughness = 0.05
+		material.roughness = 1.0
 		material.metallic = 0.0
 		
 		mesh_instance.set_surface_override_material(0, material)
+		surroundings.multimesh.instance_count = centerline.curve.point_count
+		
+		for i in range(surroundings.multimesh.instance_count):
+				path.progress_ratio = float(i) / surroundings.multimesh.instance_count
+				surroundings.multimesh.set_instance_transform(i, path.global_transform)
