@@ -13,8 +13,7 @@ transform_format = 1
 mesh = SubResource("PlaneMesh_236c3")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mll3j"]
-friction = 0.05
-rough = true
+friction = 0.01
 
 [sub_resource type="Curve3D" id="Curve3D_236c3"]
 bake_interval = 0.75
