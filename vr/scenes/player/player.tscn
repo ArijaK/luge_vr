@@ -453,7 +453,7 @@ height = 1.077
 [node name="Player" type="RigidBody3D"]
 collision_layer = 2
 input_ray_pickable = false
-mass = 98.5
+mass = 117.0
 physics_material_override = SubResource("PhysicsMaterial_8afob")
 can_sleep = false
 continuous_cd = true
