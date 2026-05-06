@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dckstqrm1gltx"]
 
 [ext_resource type="PackedScene" uid="uid://dcvdjjjinyced" path="res://scenes/track/track.tscn" id="2_v5dby"]
-[ext_resource type="PackedScene" uid="uid://dlurk0ajee0mn" path="res://scenes/player/player.tscn" id="3_t5ptc"]
+[ext_resource type="PackedScene" uid="uid://krawrbv0tcm0" path="res://scenes/player/player.tscn" id="3_1fp7r"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1fp7r"]
 ground_bottom_color = Color(0.31382, 0.31239477, 0.28846735, 1)
@@ -23,10 +23,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2
 shadow_enabled = true
 
 [node name="Track" parent="." instance=ExtResource("2_v5dby")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0018885136, -0.0072357208, -0.018924713)
 
-[node name="Player" parent="." instance=ExtResource("3_t5ptc")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 0, 0.22153711, 18)
-linear_damp = 0.1
-
-[node name="Camera3D" type="Camera3D" parent="Player"]
-transform = Transform3D(-0.034114555, 0, 0.9994181, 0, 1, 0, -0.99941814, 0, -0.03411454, -0.1602726, 0.22158617, 0.005980015)
+[node name="Player" parent="." instance=ExtResource("3_1fp7r")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.4, 20.511)
