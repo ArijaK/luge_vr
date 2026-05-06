@@ -1,8 +1,8 @@
 # TODO: Check, if there is any way how to make something private
 class_name TrackData extends Node
 
-@export var cross_section_points = 13
-@export var k_curvature = 60
+@export var cross_section_points = 32
+@export var k_curvature = 23
 
 var length = 0.0
 var width = 0.0
@@ -108,7 +108,6 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 	var half_width = width * 0.5
 	# Middle of the shape - centerline point
 	var middlepoint = floori(cross_section_points * 0.5)
-	points[middlepoint] = Vector3.ZERO
 	
 	var h = height.sample(at)
 	var c = curvature.sample(at)
@@ -126,13 +125,24 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 		var max_width = half_width + k_curvature * abs(c)
 		
 		var p0 = Vector2(half_width * curve_side, 0.0)
-		var p1 = Vector2(max_width * curve_side, default_height)
-		var p2 = Vector2(max_width * curve_side, h)
+		var p_mid = Vector2(max_width * curve_side, default_height)
+		var p3 = Vector2(max_width * curve_side, h)
+		
+		var dir01 = (p_mid - p0).normalized()
+		var dir12 = (p3 - p_mid).normalized()
+		
+		var L1 = (p_mid - p0).length()
+		var L2 = (p3 - p_mid).length()
+		
+		var p1 = p0 + dir01 * L1
+		var p2 = p3 - dir12 * L2
 
 		var curve_points = []
 		for i in range(middlepoint):
 			var t = i / float(middlepoint - 1)
-			curve_points.append(MathUtils.quadratic_bezier(p0, p1, p2, t))
+			curve_points.append(MathUtils.cubic_bezier(p0, p1, p2, p3, t))
+			## QUADRATIC BEIZER OPTION - NOT SO COOL
+			#curve_points.append(MathUtils.quadratic_bezier(p0, p_mid, p3, t))
 			
 		if curve_side < 0:
 			for i in range(middlepoint):

@@ -13,3 +13,14 @@ static func quadratic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, t: float) ->
 	var q1 = p1.lerp(p2, t)
 	var result = q0.lerp(q1, t)
 	return Vector3(result[0], result[1], 0.0) 
+
+static func cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> Vector3:
+	var q0 = p0.lerp(p1, t)
+	var q1 = p1.lerp(p2, t)
+	var q2 = p2.lerp(p3, t)
+	
+	var r0 = q0.lerp(q1, t)
+	var r1 = q1.lerp(q2, t)
+	
+	var result = r0.lerp(r1, t)
+	return Vector3(result[0], result[1], 0.0)
