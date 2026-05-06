@@ -125,7 +125,7 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 		var max_width = half_width + k_curvature * abs(c)
 		
 		var p0 = Vector2(half_width * curve_side, 0.0)
-		var p_mid = Vector2(max_width * curve_side, default_height)
+		var p_mid = Vector2(max_width * curve_side, h * 0.4)
 		var p3 = Vector2(max_width * curve_side, h)
 		
 		var dir01 = (p_mid - p0).normalized()
