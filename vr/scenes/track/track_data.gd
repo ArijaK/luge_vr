@@ -2,7 +2,7 @@
 class_name TrackData extends Node
 
 @export var cross_section_points = 32
-@export var k_curvature = 23
+@export var k_curvature = 25 ##NOTE: This is actually a quick hack, better normalize curvature to -1 and 1, not guess like that
 
 var length = 0.0
 var width = 0.0
@@ -45,11 +45,12 @@ func create_curvature():
 	
 	for c in curve_segments:
 		curvature.add_point(Vector2(
-			normalize(c.Sx_entrance), 0.0
+			normalize(c.Sx_entrance), 
+			0.0
 		))
 		curvature.add_point(Vector2(
 			normalize(c.Sx_entrance + c.length * 0.23), 
-			(1/c.radius) * c.turn
+			(1/(c.radius)) * c.turn
 		))
 		curvature.add_point(Vector2(
 			normalize(c.Sx_entrance + c.length * 0.5), 
@@ -57,10 +58,11 @@ func create_curvature():
 		))
 		curvature.add_point(Vector2(
 			normalize(c.Sx_entrance + c.length * 0.80), 
-			(1/c.radius) * c.turn
+			(1/(c.radius)) * c.turn
 		))
 		curvature.add_point(Vector2(
-			normalize(c.Sx_entrance + c.length), 0.0
+			normalize(c.Sx_entrance + c.length), 
+			0.0
 		))
 	
 	curvature.add_point(Vector2(1.0, 0.0))
@@ -111,38 +113,37 @@ func get_shape_points(at: float, T: Transform3D) -> PackedVector3Array:
 	
 	var h = height.sample(at)
 	var c = curvature.sample(at)
-	
+	var curve_side = sign(c)
 	var default_heights = MathUtils.lerp_list(default_height, 0.0, middlepoint)
 	
 	# If it is a straight trajectory
-	if is_equal_approx(h, default_height):
+	if curve_side == 0:
 		for i in range(middlepoint):
 			points[i] = Vector3(-half_width, default_heights[i], 0.0)
 			points[cross_section_points-1-i] = Vector3(half_width, default_heights[i], 0.0)
 	else:
-		var curve_side = sign(c)
 		# How curvy the wall should be
-		var max_width = half_width + k_curvature * abs(c)
+		var max_width = half_width - half_width * abs(c) * k_curvature
 		
-		var p0 = Vector2(half_width * curve_side, 0.0)
-		var p_mid = Vector2(max_width * curve_side, h * 0.4)
-		var p3 = Vector2(max_width * curve_side, h)
+		var p0 = Vector2(max_width * curve_side, 0.0)
+		var p_mid = Vector2(half_width * curve_side, 0.0)
+		var p3 = Vector2(half_width * curve_side, h)
 		
-		var dir01 = (p_mid - p0).normalized()
-		var dir12 = (p3 - p_mid).normalized()
-		
-		var L1 = (p_mid - p0).length()
-		var L2 = (p3 - p_mid).length()
-		
-		var p1 = p0 + dir01 * L1
-		var p2 = p3 - dir12 * L2
+		#var dir01 = (p_mid - p0).normalized()
+		#var dir12 = (p3 - p_mid).normalized()
+		#
+		#var L1 = (p_mid - p0).length()
+		#var L2 = (p3 - p_mid).length()
+		#
+		#var p1 = p0 + dir01 * L1
+		#var p2 = p3 - dir12 * L2
 
 		var curve_points = []
 		for i in range(middlepoint):
 			var t = i / float(middlepoint - 1)
-			curve_points.append(MathUtils.cubic_bezier(p0, p1, p2, p3, t))
-			## QUADRATIC BEIZER OPTION - NOT SO COOL
-			#curve_points.append(MathUtils.quadratic_bezier(p0, p_mid, p3, t))
+			#curve_points.append(MathUtils.cubic_bezier(p0, p1, p2, p3, t))
+			## QUADRATIC BEIZER OPTION - less straight
+			curve_points.append(MathUtils.quadratic_bezier(p0, p_mid, p3, t))
 			
 		if curve_side < 0:
 			for i in range(middlepoint):
