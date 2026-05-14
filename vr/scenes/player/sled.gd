@@ -68,7 +68,7 @@ func apply_steering() -> float:
 	var side = Vector3.UP.cross(forward).normalized()
 	apply_central_force(side * steer_force)
 	# Rotational movement
-	apply_torque(Vector3.UP * steer_force * 0.2)
+	apply_torque(Vector3.UP * steer_force * 0.15)
 	
 	return steer_input
 
@@ -86,14 +86,14 @@ func _physics_process(delta: float) -> void:
 		steer_input,
 		# Because forward is -Z and speed is m/s (so * -3.6)
 		linear_velocity.dot(transform.basis.z * -3.6),
-		rotation_degrees.z * 1,
+		rotation_degrees.x,
 		distance
 	]
 	params.append(data_params)
 	
 	steering_signal.emit(steer_input)
 	speed_signal.emit(int(linear_velocity.dot(transform.basis.z * -3.6)))
-	angle_signal.emit(rotation_degrees.z * 1)
+	angle_signal.emit(rotation_degrees.x)
 	distance_signal.emit(int(distance))
 	
 	## FILE INPUT CASE - v_fin multiply with max_force
@@ -124,19 +124,28 @@ func _ready() -> void:
 ## NOTE: Quick way to check speeds
 #func _process(delta: float) -> void:
 	#print((linear_velocity.z*3600)/1000)
-
+	
 ## Adjust physics for sleds - make collisions less dramatic
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	var lv = state.linear_velocity
+	
 	for i in range(state.get_contact_count()):
+		# Makes collisions less dramatic
 		var normal = state.get_contact_local_normal(i)
 		var impulse = state.get_contact_impulse(i)
-
-		var normal_damping = -normal * impulse.length() * 0.5
-		apply_central_force(normal_damping)
-
-		#var tangent = linear_velocity.slide(normal)
-		#var tangent_damping = -tangent * 0.3
-		#apply_central_force(tangent_damping)
-#
-		#var angular_damping = -angular_velocity * 1.0
-		#apply_torque(angular_damping)
+		
+		apply_central_impulse(-normal * impulse.length() * 0.2)
+		   
+		var tangent = lv.slide(normal)
+		apply_central_force(-tangent * 0.1)
+		
+### MI random suggestions
+##
+	### 3) Vertikālā lēciena damping
+	##if state.get_contact_count() > 0 and lv.y > 0:
+		##lv.y *= 0.2
+##
+	##state.linear_velocity = lv
+##
+	### 4) Rotācijas stabilizācija (anti-karuselis)
+	##apply_torque_impulse(-angular_velocity * 0.2)
