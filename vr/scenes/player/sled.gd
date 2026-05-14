@@ -18,6 +18,13 @@ var stamps = PackedFloat32Array()
 var v_max = 0
 var v_min = 0
 
+## Data to save to a file
+var params = []
+## Func to save to a file
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_EXIT_TREE or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		FileUtils.save_csv(params)
+
 func find_input(time):
 	for i in range(stamps.size() - 1):
 		var a = stamps[i]
@@ -49,31 +56,42 @@ func apply_pushing():
 	if Input.is_action_just_pressed("ui_accept"):
 		linear_velocity.z += -5.0
 
-func apply_steering():
+func apply_steering() -> float:
 	# NOTE: Currently happen to be inverse (you use left to steer right and vice versa), but I guess this is how it is supposed to be?
 	# UP - pa labi - kreisais
 	# DOWN - pa kreisi - labais
 	var steer_input = Input.get_axis("steer_left", "steer_right") + Input.get_axis("steer_left_second", "steer_right_second")
 	var steer_force = steer_input * max_steer_force
-	steering_signal.emit(steer_input)
 
 	# Linear movement (sideways)
 	var forward = linear_velocity.normalized()
 	var side = Vector3.UP.cross(forward).normalized()
 	apply_central_force(side * steer_force)
-	
 	# Rotational movement
 	apply_torque(Vector3.UP * steer_force * 0.2)
+	
+	return steer_input
 
+var timestamp = 0
 var distance = 0
 func _physics_process(delta: float) -> void:
-	apply_steering()
+	var steer_input = apply_steering()
 	apply_pushing()
 	
 	distance += linear_velocity.length() * delta
+	timestamp += delta
 	
-	# Because forward is -Z and speed is m/s (so * -3.6)
-	#speed_signal.emit(int(linear_velocity.z * -3.6))
+	var data_params = [
+		timestamp,
+		steer_input,
+		# Because forward is -Z and speed is m/s (so * -3.6)
+		linear_velocity.dot(transform.basis.z * -3.6),
+		rotation_degrees.z * 1,
+		distance
+	]
+	params.append(data_params)
+	
+	steering_signal.emit(steer_input)
 	speed_signal.emit(int(linear_velocity.dot(transform.basis.z * -3.6)))
 	angle_signal.emit(rotation_degrees.z * 1)
 	distance_signal.emit(int(distance))
