@@ -1,30 +1,34 @@
 extends CanvasLayer
 
 ## TODO: Make these configurable vars, so they do not duplicate
-const START_ANGLE = deg_to_rad(-220)
-const END_ANGLE = deg_to_rad(40)
+const START_ANGLE = deg_to_rad(-130)
+const END_ANGLE = deg_to_rad(130)
 
 @onready var speed = $Speed
 @onready var speed_num = $Speed/Speed
-@onready var speed_mark = $Speed/Mark
+@onready var speed_mark = $Speed/Line
 func _on_speed_signal(value):
 	speed_num.text = str(value)
 	
 	var value_range = speed.max_value - speed.min_value
-	var t = float(value - speed.min_value) / value_range
-	### NOTE: THIS WILL NOT WORK NOW
+	var t = clampf(
+		float(value - speed.min_value) / value_range,
+		0.0, 1.0
+	)
 	speed_mark.rotation = lerp(START_ANGLE, END_ANGLE, t)
 
 
-@onready var roatation = $Rotation
-@onready var rotation_mark = $Rotation/Mark
+@onready var angle = $Rotation
+@onready var rotation_mark = $Rotation/Line
 @onready var rotation_num = $Rotation/Angle
 func _on_rotation_signal(value):
 	rotation_num.text = str(roundf(value))
 	
-	var value_range = roatation.max_value - roatation.min_value
-	var t = float(value - roatation.min_value) / value_range
-	### NOTE: THIS WILL NOT WORK NOW
+	var value_range = angle.max_value - angle.min_value
+	var t = clampf(
+		float(value - angle.min_value) / value_range,
+		0.0, 1.0
+	)
 	rotation_mark.rotation = lerp(START_ANGLE, END_ANGLE, t)
 
 
