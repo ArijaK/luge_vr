@@ -1,6 +1,15 @@
 extends RigidBody3D
 
-@export var max_steer_force = 2
+# Speed notifications
+signal speed_signal(speed: int)
+# Angle notifications
+signal angle_signal(angle: float)
+# Distance notifications
+signal distance_signal(distance: int)
+# Steering notifications
+signal steering_signal(strength: float)
+
+@export var max_steer_force = 100
 
 ### FILE READING FUNCS
 var current_time = 0
@@ -35,34 +44,46 @@ func parse_txt(file):
 		v_max = values.max()
 		v_min = values.min()
 
-# NOTE: To imitate initial pushing
+# NOTE: To imitate initial pushing 
 func apply_pushing():	
 	if Input.is_action_just_pressed("ui_accept"):
 		linear_velocity.z += -5.0
 
 func apply_steering():
 	# NOTE: Currently happen to be inverse (you use left to steer right and vice versa), but I guess this is how it is supposed to be?
-	var steer_input = Input.get_axis("steer_left", "steer_right")
+	# UP - pa labi - kreisais
+	# DOWN - pa kreisi - labais
+	var steer_input = Input.get_axis("steer_left", "steer_right") + Input.get_axis("steer_left_second", "steer_right_second")
 	var steer_force = steer_input * max_steer_force
-	
+	steering_signal.emit(steer_input)
+
 	# Linear movement (sideways)
 	var forward = linear_velocity.normalized()
 	var side = Vector3.UP.cross(forward).normalized()
 	apply_central_force(side * steer_force)
 	
 	# Rotational movement
-	apply_torque(Vector3.UP * steer_force)
+	apply_torque(Vector3.UP * steer_force * 0.2)
 
-func _physics_process(_delta: float) -> void:
+var distance = 0
+func _physics_process(delta: float) -> void:
 	apply_steering()
 	apply_pushing()
+	
+	distance += linear_velocity.length() * delta
+	
+	# Because forward is -Z and speed is m/s (so * -3.6)
+	#speed_signal.emit(int(linear_velocity.z * -3.6))
+	speed_signal.emit(int(linear_velocity.dot(transform.basis.z * -3.6)))
+	angle_signal.emit(rotation_degrees.z * 1)
+	distance_signal.emit(int(distance))
 	
 	## FILE INPUT CASE - v_fin multiply with max_force
 	#var game_time = (Time.get_ticks_msec() / 1000.0) - current_time
 	#var v = find_input(game_time)
 	#var v_norm = (v - v_min) / float(v_max - v_min)
 	#var v_fin = (v_norm * 2.0) - 1.0
-	
+
 func _ready() -> void:
 	pass
 	
@@ -85,3 +106,19 @@ func _ready() -> void:
 ## NOTE: Quick way to check speeds
 #func _process(delta: float) -> void:
 	#print((linear_velocity.z*3600)/1000)
+
+## Adjust physics for sleds - make collisions less dramatic
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	for i in range(state.get_contact_count()):
+		var normal = state.get_contact_local_normal(i)
+		var impulse = state.get_contact_impulse(i)
+
+		var normal_damping = -normal * impulse.length() * 0.5
+		apply_central_force(normal_damping)
+
+		#var tangent = linear_velocity.slide(normal)
+		#var tangent_damping = -tangent * 0.3
+		#apply_central_force(tangent_damping)
+#
+		#var angular_damping = -angular_velocity * 1.0
+		#apply_torque(angular_damping)

@@ -11,7 +11,7 @@ const END_ANGLE = deg_to_rad(40)
 func _draw() -> void:
 	var center = size * 0.5
 	var radius = min(size.x, size.y) * 0.5
-	draw_circle(center, radius, Color.hex(0x1F1F1F96))
+	draw_circle(center, radius, Color.hex(0x1F1F1F96), true)
 	
 	var value_range = max_value - min_value
 	
@@ -39,7 +39,7 @@ func _draw() -> void:
 			unit_count = 1
 			
 			# Numbers
-			var text_pos = center + (direction - Vector2(0.15, -0.05)) * (radius_big_units - 20)
+			var text_pos = center + (direction - Vector2(0.1, -0.05)) * (radius_big_units - 20)
 			draw_string(get_theme_font("Open Sans SemiBold"), text_pos, str(value))
 			
 		# Small marks
