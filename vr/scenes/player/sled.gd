@@ -10,6 +10,7 @@ signal distance_signal(distance: int)
 signal steering_signal(strength: float)
 
 @export var max_steer_force = 100
+@export var preload_input = true
 
 ### FILE READING FUNCS
 var current_time = 0
@@ -20,6 +21,7 @@ var v_min = 0
 
 ## Data to save to a file
 var params = []
+var poses = []
 ## Func to save to a file
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_EXIT_TREE or what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -54,13 +56,14 @@ func parse_txt(file):
 # NOTE: To imitate initial pushing 
 func apply_pushing():	
 	if Input.is_action_just_pressed("ui_accept"):
-		linear_velocity.z += -5.0
+		linear_velocity.z += -10.0
 
 func apply_steering() -> float:
 	# NOTE: Currently happen to be inverse (you use left to steer right and vice versa), but I guess this is how it is supposed to be?
 	# UP - pa labi - kreisais
 	# DOWN - pa kreisi - labais
-	var steer_input = Input.get_axis("steer_left", "steer_right") + Input.get_axis("steer_left_second", "steer_right_second")
+	#var steer_input = Input.get_axis("steer_right", "steer_left") + Input.get_axis("steer_left_second", "steer_right_second")
+	var steer_input = Input.get_axis("steer_left", "steer_right") + Input.get_axis("steer_right_second", "steer_left_second")
 	var steer_force = steer_input * max_steer_force
 
 	# Linear movement (sideways)
@@ -75,7 +78,17 @@ func apply_steering() -> float:
 var timestamp = 0
 var distance = 0
 func _physics_process(delta: float) -> void:
-	var steer_input = apply_steering()
+	var steer_input = 0.0
+	if not preload_input:
+		steer_input = apply_steering()
+	else:
+		## FILE INPUT CASE - v_fin multiply with max_force
+		var game_time = (Time.get_ticks_msec() / 1000.0) - current_time
+		var v = find_input(game_time)
+		var v_norm = (v - v_min) / float(v_max - v_min)
+		var v_fin = (v_norm * 2.0) - 1.0
+		steer_input = v_fin * max_steer_force
+
 	apply_pushing()
 	
 	distance += linear_velocity.length() * delta
@@ -96,38 +109,28 @@ func _physics_process(delta: float) -> void:
 	angle_signal.emit(rotation_degrees.x)
 	distance_signal.emit(int(distance))
 	
-	## FILE INPUT CASE - v_fin multiply with max_force
-	#var game_time = (Time.get_ticks_msec() / 1000.0) - current_time
-	#var v = find_input(game_time)
-	#var v_norm = (v - v_min) / float(v_max - v_min)
-	#var v_fin = (v_norm * 2.0) - 1.0
 
 func _ready() -> void:
-	pass
-	
-	## TODO: FILE INPUT, must make a flag to pick which one to use
-	#var cfg = FileUtils.load_config("res://config.cfg")
-	## NOTE: Currently expects already sorted data
-	#var input_path = cfg.get_value("player", "input_path")
-	#var input_file = FileAccess.open(input_path, FileAccess.READ)
-	#
-	#if input_file == null:
-		#push_error("Cannot open file " + input_path)
-		#return
-	#
-	#parse_txt(input_file)
-	## TODO: Check if I need it.
-	#input_file.close()
-	#
-	#current_time = Time.get_ticks_msec() / 1000.0
-
-## NOTE: Quick way to check speeds
-#func _process(delta: float) -> void:
-	#print((linear_velocity.z*3600)/1000)
+	if preload_input:
+		## TODO: FILE INPUT, must make a flag to pick which one to use
+		var cfg = FileUtils.load_config("res://config.cfg")
+		## NOTE: Currently expects already sorted data
+		var input_path = cfg.get_value("player", "input_path")
+		var input_file = FileAccess.open(input_path, FileAccess.READ)
+		
+		if input_file == null:
+			push_error("Cannot open file " + input_path)
+			return
+		
+		parse_txt(input_file)
+		# TODO: Check if I need it.
+		input_file.close()
+		
+		current_time = Time.get_ticks_msec() / 1000.0
 	
 ## Adjust physics for sleds - make collisions less dramatic
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	var lv = state.linear_velocity
+	#var lv = state.linear_velocity
 	
 	for i in range(state.get_contact_count()):
 		# Makes collisions less dramatic
@@ -136,8 +139,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		
 		apply_central_impulse(-normal * impulse.length() * 0.2)
 		   
-		var tangent = lv.slide(normal)
-		apply_central_force(-tangent * 0.1)
+		var tangent = state.linear_velocity.slide(normal)
+		apply_central_force(-tangent * 0.2)
 		
 ### MI random suggestions
 ##
