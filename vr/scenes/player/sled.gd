@@ -10,7 +10,7 @@ signal distance_signal(distance: int)
 signal steering_signal(strength: float)
 
 @export var max_steer_force = 100
-@export var preload_input = true
+@export var preload_input = false
 
 ### FILE READING FUNCS
 var current_time = 0
@@ -103,6 +103,7 @@ func _physics_process(delta: float) -> void:
 		distance
 	]
 	params.append(data_params)
+	poses.append(transform)
 	
 	steering_signal.emit(steer_input)
 	speed_signal.emit(int(linear_velocity.dot(transform.basis.z * -3.6)))

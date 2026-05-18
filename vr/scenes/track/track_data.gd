@@ -2,7 +2,7 @@
 class_name TrackData extends Node
 
 @export var cross_section_points = 32
-@export var k_curvature = 25 ##NOTE: This is actually a quick hack, better normalize curvature to -1 and 1, not guess like that
+@export var k_curvature = 24 ##NOTE: This is actually a quick hack, better normalize curvature to -1 and 1, not guess like that
 
 var length = 0.0
 var width = 0.0
@@ -70,8 +70,8 @@ func create_curvature():
 
 func fill(data: Dictionary):
 	start_at = min(
-		data["segments"]["slopes"][0].
-		Sx_entrance, data["segments"]["curves"][0].Sx_entrance,
+		data["segments"]["slopes"][0].Sx_entrance, 
+		data["segments"]["curves"][0].Sx_entrance,
 		0
 	)
 	length = data["length"] - start_at
@@ -79,6 +79,7 @@ func fill(data: Dictionary):
 	default_height = data["default_height"]
 	
 	slope_segments = data["segments"]["slopes"]
+	# TODO: This is pointless to do, may just pass to create_curvature directly as with height
 	curve_segments = data["segments"]["curves"]
 	
 	create_curvature()

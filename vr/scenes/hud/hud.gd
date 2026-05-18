@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-## TODO: Make these configurable vars, so they do not duplicate
+# NOTE: I suppose this is not the best way how to do it...
 const START_ANGLE = deg_to_rad(-130)
 const END_ANGLE = deg_to_rad(130)
 
@@ -44,6 +44,7 @@ func _on_steering_signal(value):
 	steer_right.value = 0.0
 	
 	if value < 0.0:
-		steer_right.value = abs(value)
+		steer_left.value = abs(value)  
 	else:
-		steer_left.value = abs(value)
+		steer_right.value = abs(value)
+		
