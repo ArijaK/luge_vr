@@ -17,12 +17,13 @@ friction = 0.01
 rough = true
 
 [sub_resource type="Curve3D" id="Curve3D_236c3"]
-bake_interval = 0.75
+bake_interval = 0.1
 
 [node name="Track" type="Node3D"]
 script = ExtResource("1_mll3j")
 
 [node name="Surroundings" type="MultiMeshInstance3D" parent="."]
+visible = false
 multimesh = SubResource("MultiMesh_syd2a")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]

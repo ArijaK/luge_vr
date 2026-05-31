@@ -70,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 0
 color = Color(0.007843138, 0.007843138, 0.007843138, 0.5882353)
 
-[node name="Label2" type="Label" parent="Speed/Distance"]
+[node name="Label" type="Label" parent="Speed/Distance"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.48200002
