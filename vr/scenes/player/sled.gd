@@ -11,6 +11,8 @@ signal steering_signal(strength: float)
 
 @export var max_steer_force = 100
 @export var preload_input = false
+@export var params_path = "res://data/results.txt"
+@export var trajectory_path = "res://data/results_traj.txt"
 
 ### FILE READING FUNCS
 var current_time = 0
@@ -25,7 +27,8 @@ var poses = []
 ## Func to save to a file
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_EXIT_TREE or what == NOTIFICATION_WM_CLOSE_REQUEST:
-		FileUtils.save_csv(params)
+		FileUtils.save_csv(params, params_path)
+		FileUtils.save_txt_traj(poses, trajectory_path)
 
 func find_input(time):
 	for i in range(stamps.size() - 1):
@@ -103,7 +106,12 @@ func _physics_process(delta: float) -> void:
 		distance
 	]
 	params.append(data_params)
-	poses.append(transform)
+	poses.append([
+		transform.basis.x.x, transform.basis.y.x, transform.basis.z.x, transform.origin.x,
+		transform.basis.x.y, transform.basis.y.y, transform.basis.z.x, transform.origin.y,
+		transform.basis.x.z, transform.basis.y.z, transform.basis.z.x, transform.origin.z,
+		0.0, 0.0, 0.0, 1.0
+	])
 	
 	steering_signal.emit(steer_input)
 	speed_signal.emit(int(linear_velocity.dot(transform.basis.z * -3.6)))
@@ -112,12 +120,17 @@ func _physics_process(delta: float) -> void:
 	
 
 func _ready() -> void:
+	var cfg = FileUtils.load_config("res://config.cfg")
+	preload_input = cfg.get_value("player", "preload_input")
+	max_steer_force = cfg.get_value("player", "max_steer_force")
+	mass = cfg.get_value("player", "mass")
+	params_path = cfg.get_value("player", "params_path")
+	trajectory_path = cfg.get_value("player", "trajectory_path")
+	
 	if preload_input:
-		## TODO: FILE INPUT, must make a flag to pick which one to use
-		var cfg = FileUtils.load_config("res://config.cfg")
 		## NOTE: Currently expects already sorted data
 		var input_path = cfg.get_value("player", "input_path")
-		var input_file = FileAccess.open(input_path, FileAccess.READ)
+		var input_file = FileAccess.open(input_path, FileAccess.READ)		
 		
 		if input_file == null:
 			push_error("Cannot open file " + input_path)

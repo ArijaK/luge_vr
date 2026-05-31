@@ -8,7 +8,7 @@ static func load_config(path: String) -> ConfigFile:
 	else:
 		push_error("Cannot open file " + path)
 		return
-
+ 
 static func parse_json(path: String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
@@ -28,12 +28,18 @@ static func parse_json(path: String):
 		push_error("JSON Parse Error: ", json.get_error_message(), " at line ", json.get_error_line())
 		return
 
-static func save_csv(data: Array):
-	var file = FileAccess.open("res://data/results.txt", FileAccess.WRITE)
+static func save_csv(data: Array, path: String):
+	var file = FileAccess.open(path, FileAccess.WRITE)
 	
-	# Header
 	file.store_line("timestamp,steering_input,speed,rotation,distance")
-	# Data rows
 	for row in data:
 		file.store_csv_line(row)
 	file.close()
+	
+static func save_txt_traj(data: Array, path: String):
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	
+	for row in data:
+		file.store_csv_line(row)
+	file.close()
+	
