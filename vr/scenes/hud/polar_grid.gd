@@ -1,11 +1,22 @@
 class_name PolarGrid extends Control
+## A control used for visual represantation of data on a polar grid.
+##
+## A control used for visual represantation of data on a polar grid.
+## Creates a round measuring scale (like a speedometer).
+##
 
-@export var min_value = 0
-@export var max_value = 150
-@export var units = 5
-@export var big_per_unit = 5
+## Minimum value of the scale.
+@export var min_value: int = 0
+## Maximum value of the scale.
+@export var max_value: int = 150
+## How many units is each tick mark.
+@export var units_per_tick: int = 5
+## Every [member major_tick_every] tick mark is drawn as a major tick.
+@export var tick_major_every: int = 5
 
+## Start angle of the scale in radians.
 const START_ANGLE = deg_to_rad(-220)
+## End angle of the scale in radians.
 const END_ANGLE = deg_to_rad(40)
 
 func _draw() -> void:
@@ -15,35 +26,31 @@ func _draw() -> void:
 	
 	var value_range = max_value - min_value
 	
-	# How far from centre marks should be
+	# How far from centre marks should be.
 	var radius_outer = radius - 2
-	var radius_units = radius_outer - 10
-	var radius_big_units = radius_outer - 20
+	var radius_ticks = radius_outer - 10
+	var radius_ticks_major = radius_outer - 20
 	
-	var unit_count = 1
-	for value in range(min_value, max_value+1, units):
-		# Where the unit mark will be
+	var tick_count = 1
+	for value in range(min_value, max_value+1, units_per_tick):
+		# Where the tick mark will be.
 		var t = float(value - min_value) / value_range
 		var angle = lerp(START_ANGLE, END_ANGLE, t)
 		var direction = Vector2(cos(angle), sin(angle))
 		
-		# Draw unit marks
 		var outer_point = center + direction * radius_outer
-		var inner_point = center + direction * radius_units
+		var inner_point = center + direction * radius_ticks
 		var thickness = 2
 		
-		# Big marks
-		if unit_count == big_per_unit or (big_per_unit != 0 and value == min_value):
-			inner_point = center + direction * radius_big_units
+		if tick_count == tick_major_every or (tick_major_every != 0 and value == min_value):
+			inner_point = center + direction * radius_ticks_major
 			thickness = 4
-			unit_count = 1
+			tick_count = 1
 			
-			# Numbers
-			var text_pos = center + (direction - Vector2(0.1, -0.05)) * (radius_big_units - 20)
+			# Numbers.
+			var text_pos = center + (direction - Vector2(0.1, -0.05)) * (radius_ticks_major - 20)
 			draw_string(get_theme_font("Open Sans SemiBold"), text_pos, str(value))
-			
-		# Small marks
 		else:
-			unit_count += 1
+			tick_count += 1
 		
 		draw_line(inner_point, outer_point, Color.WHITE, thickness)

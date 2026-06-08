@@ -206,7 +206,7 @@ grow_vertical = 0
 script = ExtResource("1_beh3w")
 min_value = -120
 max_value = 120
-big_per_unit = 6
+tick_major_every = 6
 metadata/_custom_type_script = "uid://dxmyxnwrb3gai"
 
 [node name="Label" type="Label" parent="Rotation"]
