@@ -19,6 +19,8 @@ signal steering_signal(strength: float)
 @export var max_steer_force: float = 100
 ## Whether to load steering input from a file.
 @export var preload_input: bool = false
+## Whether to save last ride parameters.
+@export var save_ride_params: bool = false
 ## Where to write parameters of the last ride.
 ## [b]Note:[/b] All previous content of the file will be deleted
 @export var ride_params_path: String = "res://data/results.txt"
@@ -45,8 +47,9 @@ var ride_trajectory_poses: Array = []
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_EXIT_TREE or what == NOTIFICATION_WM_CLOSE_REQUEST:
-		FileUtils.save_csv(ride_params, ride_params_path)
-		FileUtils.save_txt_traj(ride_trajectory_poses, ride_trajectory_path)
+		if save_ride_params:
+			FileUtils.save_csv(ride_params, ride_params_path)
+			FileUtils.save_csv(ride_trajectory_poses, ride_trajectory_path)
 
 ## Finds steering input at specific time from preloaded input values.
 ## Uses linear interpolation between closest input values.
@@ -116,19 +119,20 @@ func _physics_process(delta: float) -> void:
 	_apply_pushing()
 	
 	# Saving ride parameters.
-	ride_params.append([
-		current_time,
-		steer_input,
-		speed,
-		rotation_degrees.x,
-		distance
-	])
-	ride_trajectory_poses.append([
-		transform.basis.x.x, transform.basis.y.x, transform.basis.z.x, transform.origin.x,
-		transform.basis.x.y, transform.basis.y.y, transform.basis.z.x, transform.origin.y,
-		transform.basis.x.z, transform.basis.y.z, transform.basis.z.x, transform.origin.z,
-		0.0, 0.0, 0.0, 1.0
-	])
+	if save_ride_params:
+		ride_params.append([
+			current_time,
+			steer_input,
+			speed,
+			rotation_degrees.x,
+			distance
+		])
+		ride_trajectory_poses.append([
+			transform.basis.x.x, transform.basis.y.x, transform.basis.z.x, transform.origin.x,
+			transform.basis.x.y, transform.basis.y.y, transform.basis.z.x, transform.origin.y,
+			transform.basis.x.z, transform.basis.y.z, transform.basis.z.x, transform.origin.z,
+			0.0, 0.0, 0.0, 1.0
+		])
 	
 	steering_signal.emit(steer_input)
 	speed_signal.emit(int(speed))
@@ -140,12 +144,16 @@ func _set_config(config: ConfigFile):
 	preload_input = config.get_value("player", "preload_input")
 	max_steer_force = config.get_value("player", "max_steer_force")
 	mass = config.get_value("player", "mass")
+	save_ride_params = config.get_value("player", "save_ride_params")
 	ride_params_path = config.get_value("player", "ride_params_path")
 	ride_trajectory_path = config.get_value("player", "ride_trajectory_path")	
 
 func _ready() -> void:
 	var cfg = FileUtils.load_config("res://config.cfg")
 	_set_config(cfg)
+	
+	if save_ride_params:
+		ride_params.append(["timestamp","steering_input","speed","rotation","distance"])
 	
 	if preload_input:
 		## NOTE: Currently expects already sorted data
