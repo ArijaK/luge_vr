@@ -11,9 +11,10 @@ func create_mesh(curve: Curve3D, track_data: TrackData):
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		
 	var line_points = curve.get_baked_points()
+	track_data.length = curve.get_baked_length()
 	var sections = []
 	
-	var Sx = 0.0
+	var Sx = track_data.start_at
 	var up = Vector3.UP
 	for i in range(1, line_points.size()):		
 		var p = line_points[i]
@@ -21,7 +22,7 @@ func create_mesh(curve: Curve3D, track_data: TrackData):
 		# To get a correct position of track points in space.
 		var T = get_T(p_prev, p, up)
 		
-		var section_points = track_data.get_cross_section_points(Sx / curve.get_baked_length())
+		var section_points = track_data.get_cross_section_points(Sx)
 		for j in range(track_data.cross_section_points):
 			section_points[j] = T * section_points[j]
 		sections.append(section_points)
