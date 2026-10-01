@@ -104,7 +104,7 @@ func _apply_steering() -> float:
 func _physics_process(delta: float) -> void:
 	var current_time = (Time.get_ticks_msec() / 1000.0) - start_time
 	# Because forward is -Z and speed is m/s (so * -3.6).
-	var speed = linear_velocity.dot(transform.basis.z * -3.6)
+	var speed = linear_velocity.length() * 3.6
 	distance += linear_velocity.length() * delta
 	
 	var steer_input = 0.0

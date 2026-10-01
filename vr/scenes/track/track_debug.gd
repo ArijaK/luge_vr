@@ -1,4 +1,7 @@
 class_name TrackDebug extends Node
+## A helper class for visual track debugging.
+##
+## Stores functions to visualize features of the drack.
 
 static func draw_data_curve(curve: Curve, centerline: Curve3D, parent: Node3D):
 	var immesh = ImmediateMesh.new()

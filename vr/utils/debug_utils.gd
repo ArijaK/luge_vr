@@ -1,7 +1,12 @@
 class_name DebugUtils extends Node
+## A class containing methods for easier debugging.
+##
+## A helper class containing methods for easier debugging.
+##
 
 static var enabled = true
 
+## Visualizes curve by making a mesh out of it.
 static func draw_curve3d(curve: Curve3D, parent: Node3D):
 	var immesh = ImmediateMesh.new()
 
