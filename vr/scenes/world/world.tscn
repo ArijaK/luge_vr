@@ -27,4 +27,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0018885136, -0.0072357208, 
 
 [node name="Player" parent="." instance=ExtResource("3_1fp7r")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.01, 0)
-visible = false

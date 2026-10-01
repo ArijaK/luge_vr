@@ -10,4 +10,3 @@ script = ExtResource("1_k2fmo")
 [node name="World" parent="." instance=ExtResource("1_0xm2m")]
 
 [node name="Control" parent="." instance=ExtResource("2_h2yge")]
-visible = false

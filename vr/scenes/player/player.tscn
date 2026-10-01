@@ -21,8 +21,9 @@ angular_damp = 1.0
 script = ExtResource("2_dovo2")
 max_steer_force = null
 preload_input = null
-params_path = null
-trajectory_path = null
 
 [node name="Camera3D" type="Camera3D" parent="Sled" index="3"]
+transform = Transform3D(0.04979514, -0.2870594, 0.9566177, 0.02862048, 0.9578227, 0.2859312, -0.9983493, 0.013140872, 0.05591069, 1.6705017, 0.4584305, -0.023873914)
+
+[node name="Camera3D2" type="Camera3D" parent="Sled" index="4"]
 transform = Transform3D(0.04979514, -0.2870594, 0.9566177, 0.02862048, 0.9578227, 0.2859312, -0.9983493, 0.013140872, 0.05591069, 1.6705017, 0.4584305, -0.023873914)
